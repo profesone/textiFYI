@@ -5,16 +5,124 @@
         <div class="card-header">
             <div class="card-header-container">
                 <h6 class="card-title">
-                    {{ trans('global.view') }}
-                    {{ trans('cruds.client.title_singular') }}:
-                    {{ trans('cruds.client.fields.id') }}
-                    {{ $client->id }}
+                    Client:
+                    @if($client->company_name)
+                        {{ $client->company_name }}
+                    @endif
+                    @if($client->textiFyiNumber)
+                        TextiFYI #
+                        <span class="badge badge-relationship">{{ $client->textiFyiNumber->textifyi_numbers ?? '' }}</span>
+                    @endif
                 </h6>
             </div>
         </div>
 
         <div class="card-body">
             <div class="pt-3">
+                <table class="table table-view">
+                    <tbody class="bg-white">
+                    <tr>
+                        <td>
+                            {{ $client->client_name }}
+                        </td>
+                        <td>
+                            {{ $client->main_contact_number }}
+                        </td>
+                        <td>
+                            {{ $client->email }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ trans('cruds.client.fields.default_message') }}
+                            {{ $client->default_message }}
+                        </td>
+                        <td>
+                            {{ trans('cruds.client.fields.default_request_message') }}
+                            {{ $client->default_request_message }}
+                        </td>
+                        <td>
+                            {{ trans('cruds.client.fields.default_zipcode_message') }}
+                            {{ $client->default_zipcode_message }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ trans('cruds.client.fields.email_address_response') }}
+                            {{ $client->email_address_response }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->default_messages_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.default_messages_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->default_message_notification ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.default_message_notification') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->default_message_response ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.default_message_response') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->publish_keywords_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.publish_keywords_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->leads_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.leads_module') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->keyword_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.keyword_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->mls_listing_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.mls_listing_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->mls_agent_notification ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.mls_agent_notification') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->tips_request_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.tips_request_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->zip_code_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.zip_code_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->default_zip_notification ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.default_zip_notification') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->email_address_module ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.email_address_module') }}
+                        </td>
+                        <td>
+                            <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $client->default_email_notification ? 'checked' : '' }}>
+                            {{ trans('cruds.client.fields.default_email_notification') }}
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                Created {{ $client->updated_at }}
+                @if($client->deleted_at)
+                    Deleted on {{ $client->deleted_at }}
+                @endif
+
+
                 <table class="table table-view">
                     <tbody class="bg-white">
                         <tr>

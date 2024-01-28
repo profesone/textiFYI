@@ -2,7 +2,7 @@
 
     <div class="form-group {{ $errors->has('textifyiNumber.textifyi_numbers') ? 'invalid' : '' }}">
         <label class="form-label required" for="textifyi_numbers">{{ trans('cruds.textifyiNumber.fields.textifyi_numbers') }}</label>
-        <input class="form-control" type="text" name="textifyi_numbers" id="textifyi_numbers" required wire:model.defer="textifyiNumber.textifyi_numbers">
+        <input class="form-control" type="tel" pattern="[0-9]{10}" name="textifyi_numbers" id="textifyi_numbers" required wire:model.defer="textifyiNumber.textifyi_numbers">
         <div class="validation-message">
             {{ $errors->first('textifyiNumber.textifyi_numbers') }}
         </div>

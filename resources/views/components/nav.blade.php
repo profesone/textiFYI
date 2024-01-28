@@ -2,6 +2,7 @@
     <div class="w-full mx-auto items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
         <a class="text-white text-sm uppercase hidden lg:inline-block font-semibold" href="#">
             {{-- Dashboard --}}
+            Hello {{ Auth::user()->name }}
         </a>
 
         {{-- If you use user icon and menu add margin mr-3 to search --}}

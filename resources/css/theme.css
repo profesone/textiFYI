@@ -39,7 +39,7 @@
 }
 
 .btn.btn-primary {
-    @apply bg-pink-500 text-white active:bg-pink-600 focus:ring-pink-500
+    @apply bg-pink-500 text-white active:bg-orange-500 focus:ring-pink-500
 }
 
 .btn.btn-indigo {

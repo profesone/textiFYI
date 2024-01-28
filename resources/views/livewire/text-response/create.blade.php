@@ -42,7 +42,7 @@
     </div>
     <div class="form-group {{ $errors->has('textResponse.notification_main') ? 'invalid' : '' }}">
         <label class="form-label" for="notification_main">{{ trans('cruds.textResponse.fields.notification_main') }}</label>
-        <input class="form-control" type="text" name="notification_main" id="notification_main" wire:model.defer="textResponse.notification_main">
+        <input class="form-control" type="tel" pattern="[0-9]{10}" name="notification_main" id="notification_main" wire:model.defer="textResponse.notification_main">
         <div class="validation-message">
             {{ $errors->first('textResponse.notification_main') }}
         </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="form-group {{ $errors->has('textResponse.notification_01') ? 'invalid' : '' }}">
         <label class="form-label" for="notification_01">{{ trans('cruds.textResponse.fields.notification_01') }}</label>
-        <input class="form-control" type="text" name="notification_01" id="notification_01" wire:model.defer="textResponse.notification_01">
+        <input class="form-control" type="tel" pattern="[0-9]{10}" name="notification_01" id="notification_01" wire:model.defer="textResponse.notification_01">
         <div class="validation-message">
             {{ $errors->first('textResponse.notification_01') }}
         </div>

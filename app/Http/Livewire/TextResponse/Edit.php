@@ -34,7 +34,7 @@ class Edit extends Component
         $this->textResponse->save();
         $this->textResponse->keywords()->sync($this->keywords);
 
-        return redirect()->route('admin.text-responses.index');
+        return redirect()->route('admin.clients.show', [$this->textResponse->client->id]);
     }
 
     protected function rules(): array

@@ -22,7 +22,7 @@
     </div>
     <div class="form-group {{ $errors->has('client.main_contact_number') ? 'invalid' : '' }}">
         <label class="form-label required" for="main_contact_number">{{ trans('cruds.client.fields.main_contact_number') }}</label>
-        <input class="form-control" type="text" name="main_contact_number" id="main_contact_number" required wire:model.defer="client.main_contact_number">
+        <input class="form-control" type="tel" pattern="[0-9]{10}" name="main_contact_number" id="main_contact_number" required wire:model.defer="client.main_contact_number">
         <div class="validation-message">
             {{ $errors->first('client.main_contact_number') }}
         </div>
