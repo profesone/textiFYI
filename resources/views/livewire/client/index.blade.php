@@ -98,6 +98,8 @@
                             <td>
                                 @if($client->textiFyiNumber)
                                     <span class="badge badge-relationship">{{ $client->textiFyiNumber->textifyi_numbers ?? '' }}</span>
+                                @else
+                                    <span class="badge badge-relationship">This client has no TextiFYI Number.</span>
                                 @endif
                             </td>
                             <td>

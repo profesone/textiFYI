@@ -55,6 +55,10 @@
                             @include('components.table.sort', ['field' => 'campaign'])
                         </th>
                         <th>
+                            {{ trans('cruds.textResponse.fields.active') }}
+                            @include('components.table.sort', ['field' => 'active'])
+                        </th>
+                        <th>
                             {{ trans('cruds.textResponse.fields.response') }}
                             @include('components.table.sort', ['field' => 'response'])
                         </th>
@@ -82,10 +86,6 @@
                             @include('components.table.sort', ['field' => 'end_date'])
                         </th>
                         <th>
-                            {{ trans('cruds.textResponse.fields.active') }}
-                            @include('components.table.sort', ['field' => 'active'])
-                        </th>
-                        <th>
                         </th>
                     </tr>
                 </thead>
@@ -105,6 +105,9 @@
                             </td>
                             <td>
                                 {{ $textResponse->campaign }}
+                            </td>
+                            <td>
+                                <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $textResponse->active ? 'checked' : '' }}>
                             </td>
                             <td>
                                 {{ $textResponse->response }}
@@ -130,9 +133,6 @@
                             </td>
                             <td>
                                 {{ $textResponse->end_date }}
-                            </td>
-                            <td>
-                                <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $textResponse->active ? 'checked' : '' }}>
                             </td>
                             <td>
                                 <div class="flex justify-end">

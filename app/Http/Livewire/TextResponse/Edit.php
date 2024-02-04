@@ -11,6 +11,8 @@ class Edit extends Component
 {
     public array $keywords = [];
 
+    public string $add_keyword = '';
+
     public array $listsForFields = [];
 
     public TextResponse $textResponse;
@@ -18,13 +20,41 @@ class Edit extends Component
     public function mount(TextResponse $textResponse)
     {
         $this->textResponse = $textResponse;
-        $this->keywords     = $this->textResponse->keywords()->pluck('id')->toArray();
+        $this->keywords     = $this->textResponse->keywords()->pluck('id', 'keyword')->toArray();
         $this->initListsForFields();
     }
 
     public function render()
     {
         return view('livewire.text-response.edit');
+    }
+
+    public function add()
+    {
+        $this->addButton = "Processing..";
+        // Add the string keyword if it's not already there.
+        if (
+            Keyword::where('keyword', $this->add_keyword)->where('client_id', $this->textResponse->client_id)->first()
+            || "Keyword already in list." === $this->add_keyword
+        )
+        {
+            $this->add_keyword = "Keyword already in list.";
+            return;
+        }
+
+        // Update the current keywords array
+        if (!empty($this->add_keyword))
+        {
+            $keyword = new Keyword;
+            $keyword->client_id = $this->textResponse->client_id;
+            $keyword->keyword = $this->add_keyword;
+            $keyword->save();
+            // Update the keyword list
+            $this->initListsForFields();
+
+            //
+        }
+        $this->addButton = "Add";
     }
 
     public function submit()
@@ -95,7 +125,7 @@ class Edit extends Component
     protected function initListsForFields(): void
     {
         $this->listsForFields['client']       = Client::pluck('client_name', 'id')->toArray();
-        $this->listsForFields['keywords']     = Keyword::pluck('keyword', 'id')->toArray();
-        $this->listsForFields['main_keyword'] = Keyword::pluck('keyword', 'id')->toArray();
+        $this->listsForFields['keywords'] = Keyword::where('client_id', $this->textResponse->client_id)->pluck('keyword', 'id')->toArray();
+        $this->listsForFields['main_keyword'] = $this->listsForFields['keywords'];
     }
 }
