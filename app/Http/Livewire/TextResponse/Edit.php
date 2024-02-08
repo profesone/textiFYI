@@ -47,13 +47,19 @@ class Edit extends Component
         {
             $keyword = new Keyword;
             $keyword->client_id = $this->textResponse->client_id;
-            $keyword->keyword = $this->add_keyword;
+            $keyword->keyword = strtolower($this->add_keyword);
             $keyword->save();
+
             // Update the keyword list
             $this->initListsForFields();
 
             //
         }
+
+        // Auto add to selected keywords
+        $this->listsForFields[] = $this->add_keyword;
+        $this->keywords[] = sizeof($this->listsForFields['keywords']);
+        $this->add_keyword = '';
         $this->addButton = "Add";
     }
 

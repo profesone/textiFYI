@@ -61,75 +61,75 @@
         </div>
     </div>
     <fieldset style="border: #0b2e13 .1em solid; padding:1em;">
-        <legend>Keyword Options:</legend>
-            <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
-                <label class="form-label" for="keyword-list">Current Keyword List</label>
-                @if (empty($this->keywords))
-                    <span class="badge badge-relationship"> No Keywords Selected </span>
-                @endif
-                @foreach($this->keywords as $key)
+        <legend>Keywords:</legend>
+        <div class="form-group {{ $errors->has('textResponse.main_keyword_id') ? 'invalid' : '' }}">
+            <label class="form-label required" for="main_keyword">{{ trans('cruds.textResponse.fields.main_keyword') }}</label>
+            <select class="select2 form-control" required id="main_keyword"
+                    name="main_keyword"
+                    wire:model="textResponse.main_keyword_id" />
+            @if(count($this->listsForFields['keywords']) > 0)
+                @foreach($this->listsForFields['keywords'] as $key => $keyword)
+                    <option value="{{ $key }}">{{ $keyword }}</option>
+                    @endforeach
+                    @endif
+                    </select>
+                    <div class="validation-message">
+                        {{ $errors->first('textResponse.main_keyword_id') }}
+                    </div>
+                    <div class="help-block">
+                        {{ trans('cruds.textResponse.fields.main_keyword_helper') }}
+                    </div>
+        </div>
+        <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
+            <label class="form-label" for="keywords">Select {{ trans('cruds.textResponse.fields.keywords') }}</label>
+            <select
+                class="form-control select2"
+                id="keywords"
+                name="keywords"
+                wire:model="keywords"
+                multiple />
+            @if(count($this->listsForFields['keywords']) > 0)
+                @foreach($this->listsForFields['keywords'] as $key => $keyword)
+                    <option value="{{ $key }}">{{ $keyword }}</option>
+                    @endforeach
+                    @endif
+                    </select>
+
+                    <div class="validation-message">
+                        {{ $errors->first('keywords') }}
+                    </div>
+                    <div class="help-block">
+                        {{ trans('cruds.textResponse.fields.keywords_helper') }}
+                    </div>
+        </div>
+        <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
+            @if (empty($this->keywords))
+                <span class="badge badge-relationship"> No Keywords Selected </span>
+            @endif
+            @foreach($this->keywords as $key)
                 <span class="badge badge-relationship"> {{ $this->listsForFields['keywords'][$key] }} </span>
-                @endforeach
+            @endforeach
+        </div>
+        <hr style="margin: 2em 0 2em 0">
+
+        <div class="form-group ">
+            <label class="form-label" for="add_keyword">Create New Keyword</label>
+            <input class="form-control"
+                   placeholder="In case the keyword is not in your current list."
+                   type="text"
+                   name="add_keyword"
+                   id="add_keyword"
+                   wire:model.lazy="add_keyword">
+            <div class="validation-message">
+                {{ $errors->first('textResponse.add_keyword') }}
             </div>
-            <div class="form-group {{ $errors->has('textResponse.main_keyword_id') ? 'invalid' : '' }}">
-                <label class="form-label required" for="main_keyword">{{ trans('cruds.textResponse.fields.main_keyword') }}</label>
-                <select class="select2 form-control" required id="main_keyword"
-                   name="main_keyword"
-                   wire:model="textResponse.main_keyword_id" />
-                @if(count($this->listsForFields['keywords']) > 0)
-                    @foreach($this->listsForFields['keywords'] as $key => $keyword)
-                        <option value="{{ $key }}">{{ $keyword }}</option>
-                    @endforeach
-                @endif
-                </select>
-                <div class="validation-message">
-                    {{ $errors->first('textResponse.main_keyword_id') }}
-                </div>
-                <div class="help-block">
-                    {{ trans('cruds.textResponse.fields.main_keyword_helper') }}
-                </div>
-            </div>
-            <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
-                <label class="form-label" for="keywords">{{ trans('cruds.textResponse.fields.keywords') }}</label>
-                <select class="form-control select2"
-                    id="keywords"
-                    name="keywords"
-                    wire:model="keywords"
-                    multiple />
-                @if(count($this->listsForFields['keywords']) > 0)
-                    @foreach($this->listsForFields['keywords'] as $key => $keyword)
-                        <option value="{{ $key }}">{{ $keyword }}</option>
-                    @endforeach
-                @endif
-                </select>
-                <div class="validation-message">
-                    {{ $errors->first('keywords') }}
-                </div>
-                <div class="help-block">
-                    {{ trans('cruds.textResponse.fields.keywords_helper') }}
-                </div>
+            <div class="help-block pb-10">
             </div>
 
-            <hr style="margin: 2em 0 2em 0">
-
-            <div class="form-group ">
-                <label class="form-label" for="add_keyword">Create New Keyword</label>
-                <input class="form-control"
-                       placeholder="In case the keyword is not in your current list."
-                       type="text"
-                       name="add_keyword"
-                       id="add_keyword"
-                       wire:model.lazy="add_keyword">
-                <div class="validation-message">
-                    {{ $errors->first('textResponse.add_keyword') }}
-                </div>
-                <div class="help-block pb-10">
-
-                </div>
-                <button wire:click.prevent="add()" class="btn btn-indigo mr-2">
-                    Add
-                </button>
-            </div>
+            <button wire:click.prevent="add()" class="btn btn-indigo mr-2 pb-10">
+                Add
+            </button>
+        </div>
     </fieldset>
     <div class="form-group {{ $errors->has('textResponse.start_date') ? 'invalid' : '' }}">
         <label class="form-label" for="start_date">{{ trans('cruds.textResponse.fields.start_date') }}</label>
