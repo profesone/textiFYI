@@ -32,6 +32,8 @@ class Edit extends Component
     public function add()
     {
         $this->addButton = "Processing..";
+
+
         // Add the string keyword if it's not already there.
         if (
             Keyword::where('keyword', $this->add_keyword)->where('client_id', $this->textResponse->client_id)->first()
@@ -58,7 +60,7 @@ class Edit extends Component
 
         // Auto add to selected keywords
         $this->listsForFields[] = $this->add_keyword;
-        $this->keywords[] = sizeof($this->listsForFields['keywords']);
+        $this->keywords[] = max(array_keys($this->listsForFields['keywords']));
         $this->add_keyword = '';
         $this->addButton = "Add";
     }

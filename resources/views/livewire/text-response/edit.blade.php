@@ -2,7 +2,7 @@
 
     <div class="form-group {{ $errors->has('textResponse.client_id') ? 'invalid' : '' }}">
         <label class="form-label" for="client">{{ trans('cruds.textResponse.fields.client') }}</label>
-        <x-select-list class="form-control" id="client" name="client" :options="$this->listsForFields['client']" wire:model="textResponse.client_id" />
+        <x-select-list class="form-control" id="client" required name="client" :options="$this->listsForFields['client']" wire:model="textResponse.client_id" />
         <div class="validation-message">
             {{ $errors->first('textResponse.client_id') }}
         </div>
@@ -67,18 +67,17 @@
             <select class="select2 form-control" required id="main_keyword"
                     name="main_keyword"
                     wire:model="textResponse.main_keyword_id" />
-            @if(count($this->listsForFields['keywords']) > 0)
-                @foreach($this->listsForFields['keywords'] as $key => $keyword)
-                    <option value="{{ $key }}">{{ $keyword }}</option>
-                    @endforeach
-                    @endif
-                    </select>
-                    <div class="validation-message">
-                        {{ $errors->first('textResponse.main_keyword_id') }}
-                    </div>
-                    <div class="help-block">
-                        {{ trans('cruds.textResponse.fields.main_keyword_helper') }}
-                    </div>
+            <option>Select one or create one below.</option>
+            @foreach($this->listsForFields['keywords'] as $key => $keyword)
+                <option value={{ $key }}>{{ $keyword }}</option>
+                @endforeach
+                </select>
+                <div class="validation-message">
+                    {{ $errors->first('textResponse.main_keyword_id') }}
+                </div>
+                <div class="help-block">
+                    {{ trans('cruds.textResponse.fields.main_keyword_helper') }}
+                </div>
         </div>
         <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
             <label class="form-label" for="keywords">Select {{ trans('cruds.textResponse.fields.keywords') }}</label>
@@ -88,19 +87,17 @@
                 name="keywords"
                 wire:model="keywords"
                 multiple />
-            @if(count($this->listsForFields['keywords']) > 0)
-                @foreach($this->listsForFields['keywords'] as $key => $keyword)
-                    <option value="{{ $key }}">{{ $keyword }}</option>
-                    @endforeach
-                    @endif
-                    </select>
+            @foreach($this->listsForFields['keywords'] as $key => $keyword)
+                <option value={{ $key }}>{{ $keyword }}</option>
+                @endforeach
+                </select>
 
-                    <div class="validation-message">
-                        {{ $errors->first('keywords') }}
-                    </div>
-                    <div class="help-block">
-                        {{ trans('cruds.textResponse.fields.keywords_helper') }}
-                    </div>
+                <div class="validation-message">
+                    {{ $errors->first('keywords') }}
+                </div>
+                <div class="help-block">
+                    {{ trans('cruds.textResponse.fields.keywords_helper') }}
+                </div>
         </div>
         <div class="form-group {{ $errors->has('keywords') ? 'invalid' : '' }}">
             @if (empty($this->keywords))
