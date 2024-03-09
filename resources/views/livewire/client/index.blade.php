@@ -8,12 +8,6 @@
                 @endforeach
             </select>
 
-            @can('client_delete')
-                <button class="btn btn-rose ml-3 disabled:opacity-50 disabled:cursor-not-allowed" type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled" {{ $this->selectedCount ? '' : 'disabled' }}>
-                    {{ __('Delete Selected') }}
-                </button>
-            @endcan
-
             @if(file_exists(app_path('Http/Livewire/ExcelExport.php')))
                 <livewire:excel-export model="Client" format="csv" />
                 <livewire:excel-export model="Client" format="xlsx" />
@@ -40,12 +34,6 @@
             <table class="table table-index w-full">
                 <thead>
                     <tr>
-                        <th class="w-9">
-                        </th>
-                        <th class="w-28">
-                            {{ trans('cruds.client.fields.id') }}
-                            @include('components.table.sort', ['field' => 'id'])
-                        </th>
                         <th>
                             {{ trans('cruds.client.fields.client_name') }}
                             @include('components.table.sort', ['field' => 'client_name'])
@@ -55,7 +43,7 @@
                             @include('components.table.sort', ['field' => 'company_name'])
                         </th>
                         <th>
-                            {{ trans('cruds.client.fields.main_contact_number') }}
+                            {{ trans('contact number') }}
                             @include('components.table.sort', ['field' => 'main_contact_number'])
                         </th>
                         <th>
@@ -73,12 +61,6 @@
                 <tbody>
                     @forelse($clients as $client)
                         <tr>
-                            <td>
-                                <input type="checkbox" value="{{ $client->id }}" wire:model="selected">
-                            </td>
-                            <td>
-                                {{ $client->id }}
-                            </td>
                             <td>
                                 {{ $client->client_name }}
                             </td>
@@ -105,12 +87,7 @@
                             <td>
                                 <div class="flex justify-end">
                                     @can('client_show')
-                                        <a class="btn btn-sm btn-info mr-2" href="{{ route('admin.clients.show', $client) }}">
-                                            {{ trans('global.view') }}
-                                        </a>
-                                    @endcan
-                                    @can('client_edit')
-                                        <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.clients.edit', $client) }}">
+                                        <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.clients.show', $client) }}">
                                             {{ trans('global.edit') }}
                                         </a>
                                     @endcan
