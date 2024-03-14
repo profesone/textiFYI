@@ -7,7 +7,6 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-
             @can('text_response_delete')
                 <button class="btn btn-rose ml-3 disabled:opacity-50 disabled:cursor-not-allowed" type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled" {{ $this->selectedCount ? '' : 'disabled' }}>
                     {{ __('Delete Selected') }}

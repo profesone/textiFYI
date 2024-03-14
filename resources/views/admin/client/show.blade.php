@@ -136,7 +136,7 @@
             </div>
             <div>
                 <h6 class="card-title" style="padding-top: 30px">Responses</h6>
-                @livewire('text-response.index',[$client->client_name])
+                @livewire('client.global-view',[$client->id])
             </div>
         </div>
     </div>

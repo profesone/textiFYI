@@ -132,8 +132,8 @@ return [
         ],
     ],
     'client' => [
-        'title'          => 'Client Management',
-        'title_singular' => 'Client Management',
+        'title'          => 'Clients',
+        'title_singular' => 'Clients',
         'fields'         => [
             'id'                                  => 'ID',
             'id_helper'                           => ' ',
