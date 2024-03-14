@@ -140,28 +140,7 @@
                                 @endif
                             </td>
                             <td> <!-- NOTIFICATION 01 -->
-                                @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notification_01')
-                                    <input type="text" wire:model="edited"/>
-                                    <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
-                                                wire:click="saveField({{$index}})">
-                                            Save
-                                        </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
-                                                wire:click="$toggle('editedRowField')">
-                                        </button>
-                                    </div>
-                                    @if ($errors->has('textResponse.' . $textResponse->id . '.notification_01'))
-                                        {{ $errors->first('textResponse.' . $textResponse->id . '.notification_01') }}
-                                    @endif
-                                @else
-                                    <button class="badge badge-relationship mr-2"
-                                            type="button"
-                                            wire:loading.attr="disabled"
-                                            wire:click="editedRowField({{ $textResponse->id }}, 'notification_01')">
-                                        {{ $textResponse->notification_01 }}
-                                    </button>
-                                @endif
+                                c
                             </td>
                             <td> <!-- MAIN KEYWORD -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'mainKeyword')
@@ -185,41 +164,23 @@
                                 @endif
                             </td>
                             <td> <!-- KEYWORDS -->
-                                <input type="text" wire:model="editedKeyword"/>
-                                <button class="btn btn-sm btn-indigo mr-2 fas fa-plus"
-                                    wire:click="addKeyword({{$editedKeyword, $textResponse->id}})">
-                                </button>
-                                @foreach($textResponse->keywords as $key => $entry)
-                                    <span
-                                        model:click="saveKeyword({{ $entry->keyword }})"
-                                        class="badge badge-relationship">{{ $entry->keyword }}
-                                    </span>
-                                @endforeach
-                                @if ($editedRowIndex === $textResponse->id && $editedRowField === 'keyword')
-                                    <input type="text" wire:model="editedKeyword"/>
-                                    <div class="float-right">
-                                        <!-- ADD KEYWORD -->
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-edit"
-                                                wire:click="editKeyword('editedRowField')">
-                                        </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-minus"
-                                                wire:click="removeKeyword('editedRowField')">
-                                        </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
-                                                wire:click="$toggle('editedRowField')">
-                                        </button>
-                                    </div>
+                                <input type="text" wire:model="newKeyword"/>
+                                 @if(strlen({{ $newKeyword }}) > 1)
+                                    <button class="btn btn-sm btn-rose mr-2 fas fa-add"
+                                        wire:click="addKeyword({{ newKeyword }})">
+                                    </button>
+                                     <button class="btn btn-sm btn-rose mr-2 fas fa-close"
+                                        wire:click="reset({{ newKeyword }})">
+                                    </button>
                                 @endif
-
-                                <div class="float-right">
-                                    <button class="btn btn-sm btn-indigo mr-2"
-                                            wire:click="saveField({{$index}})">
-                                        Save
+                                @foreach($textResponse->keywords as $key => $entry)
+                                    <button
+                                        model:click="saveKeyword({{ $entry->keyword }})"
+                                        class="badge badge-relationship mr-2">
+                                        <span wire:hover="removeKeyword({{ $key }})">x </span>
+                                        {{ $entry->keyword }}
                                     </button>
-                                    <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
-                                            wire:click="$toggle('editedRowField')">
-                                    </button>
-                                </div>
+                                @endforeach
                             </td>
                             <td> <!-- SCHEDULES -->
                                 @if (empty($textResponse->start_date) || empty($textResponse->end_date))
