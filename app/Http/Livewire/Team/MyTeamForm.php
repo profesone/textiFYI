@@ -38,9 +38,16 @@ class MyTeamForm extends Component
             'owner_id' => $this->user->id,
         ]);
 
+        // Update user
+        $team = Team::firstWhere('owner_id', auth()->id());
+        User::where('id', auth()->id())
+            ->update(['team_id' => $team->id]);
+
         $this->emit('saved');
 
         $this->refreshCurrentUser();
+
+        return redirect(request()->header('Referer'));
     }
 
     public function disbandTeam()

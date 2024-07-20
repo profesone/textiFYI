@@ -12,37 +12,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TextifyiNumber extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes, Tenantable;
+    use HasFactory, HasAdvancedFilter, SoftDeletes;
 
     public $table = 'textifyi_numbers';
 
-    protected $casts = [
-        'used' => 'boolean',
-    ];
-
     protected $fillable = [
         'textifyi_numbers',
-        'used',
         'team_id',
+    ];
+
+    public $orderable = [
+        'textifyi_numbers',
+        'created_at',
+    ];
+
+    public $filterable = [
+        'textifyi_numbers',
+        'created_at',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at',
-    ];
-
-    public $filterable = [
-        'textifyi_numbers',
-        'created_at',
-        'team.name',
-    ];
-
-    public $orderable = [
-        'textifyi_numbers',
-        'used',
-        'created_at',
-        'team.name',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

@@ -23,15 +23,6 @@ class Client extends Model
         'deleted_at',
     ];
 
-    public $orderable = [
-        'id',
-        'client_name',
-        'company_name',
-        'main_contact_number',
-        'email',
-        'texti_fyi_number.textifyi_numbers',
-    ];
-
     public $filterable = [
         'id',
         'client_name',
@@ -39,6 +30,14 @@ class Client extends Model
         'main_contact_number',
         'email',
         'texti_fyi_number.textifyi_numbers',
+        'default_message',
+        'default_request_message',
+        'default_zipcode_message',
+        'email_address_response',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'team.name',
     ];
 
     protected $casts = [
@@ -80,6 +79,37 @@ class Client extends Model
         'default_zip_notification',
         'email_address_module',
         'default_email_notification',
+        'team_id',
+    ];
+
+    public $orderable = [
+        'id',
+        'client_name',
+        'company_name',
+        'main_contact_number',
+        'email',
+        'texti_fyi_number.textifyi_numbers',
+        'default_message',
+        'default_request_message',
+        'default_zipcode_message',
+        'email_address_response',
+        'default_messages_module',
+        'default_message_notification',
+        'default_message_response',
+        'publish_keywords_module',
+        'leads_module',
+        'keyword_module',
+        'mls_listing_module',
+        'mls_agent_notification',
+        'tips_request_module',
+        'zip_code_module',
+        'default_zip_notification',
+        'email_address_module',
+        'default_email_notification',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'team.name',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

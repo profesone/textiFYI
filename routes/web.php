@@ -49,9 +49,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::resource('clients', ClientController::class, ['except' => ['store', 'update', 'destroy']]);
 
     // Keywords
-    Route::post('keywords/csv', [KeywordController::class, 'csvStore'])->name('keywords.csv.store');
-    Route::put('keywords/csv', [KeywordController::class, 'csvUpdate'])->name('keywords.csv.update');
-    Route::resource('keywords', KeywordController::class, ['except' => ['store', 'update', 'destroy']]);
+    Route::resource('keywords', KeywordController::class, ['except' => ['store', 'update', 'destroy', 'create', 'edit', 'show']]);
 
     // Text Response
     Route::post('text-responses/csv', [TextResponseController::class, 'csvStore'])->name('text-responses.csv.store');

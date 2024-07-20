@@ -87,13 +87,13 @@
                             <td>
                                 <div class="flex justify-end">
                                     @can('client_show')
-                                        <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.clients.show', $client) }}">
-                                            {{ trans('global.edit') }}
+                                        <a class="btn btn-sm btn-indigo mr-2" href="{{ route('admin.clients.show', $client) }}">
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('client_delete')
                                         <button class="btn btn-sm btn-rose mr-2" type="button" wire:click="confirm('delete', {{ $client->id }})" wire:loading.attr="disabled">
-                                            {{ trans('global.delete') }}
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     @endcan
                                 </div>

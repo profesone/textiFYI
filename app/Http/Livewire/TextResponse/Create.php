@@ -71,7 +71,7 @@ class Create extends Component
         $this->textResponse->save();
         $this->textResponse->keywords()->sync($this->keywords);
 
-        return redirect()->route('admin.text-responses.index');
+        return redirect()->route('admin.client.index');
     }
 
     protected function rules(): array

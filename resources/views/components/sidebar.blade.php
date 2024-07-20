@@ -107,6 +107,7 @@
                     </li>
                 @endcan
                 @can('client_access')
+                    @if(!empty(auth()->user()->team_id) || auth()->user()->is_admin)
                     <li class="items-center">
                         <a class="{{ request()->is("admin/clients*") ? "sidebar-nav-active" : "sidebar-nav" }}" href="{{ route("admin.clients.index") }}">
                             <i class="fa-fw c-sidebar-nav-icon fas fa-users">
@@ -114,25 +115,13 @@
                             {{ trans('cruds.client.title') }}
                         </a>
                     </li>
+                    @else
+                        <li>
+                            Please got to "My Agency" below and create a team name.
+                        </li>
+                    @endif
                 @endcan
-{{--                @can('keyword_access')--}}
-{{--                    <li class="items-center">--}}
-{{--                        <a class="{{ request()->is("admin/keywords*") ? "sidebar-nav-active" : "sidebar-nav" }}" href="{{ route("admin.keywords.index") }}">--}}
-{{--                            <i class="fa-fw c-sidebar-nav-icon fas fa-plug">--}}
-{{--                            </i>--}}
-{{--                            {{ trans('cruds.keyword.title') }}--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                @endcan--}}
-                @can('text_response_access')
-                    <li class="items-center">
-                        <a class="{{ request()->is("admin/text-responses*") ? "sidebar-nav-active" : "sidebar-nav" }}" href="{{ route("admin.text-responses.index") }}">
-                            <i class="fa-fw c-sidebar-nav-icon far fa-comment-alt">
-                            </i>
-                            {{ trans('cruds.textResponse.title') }}
-                        </a>
-                    </li>
-                @endcan
+                <hr class="mb-6 mt-6 md:min-w-full" />
                 <li class="items-center">
                     <a class="{{ request()->is("admin/messages*") ? "sidebar-nav-active" : "sidebar-nav" }}" href="{{ route("admin.messages.index") }}">
                         <i class="far fa-fw fa-envelope c-sidebar-nav-icon">

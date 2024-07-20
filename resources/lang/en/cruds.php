@@ -70,7 +70,7 @@ return [
         ],
     ],
     'team' => [
-        'title'          => 'Teams',
+        'title'          => 'Agencies',
         'title_singular' => 'Team',
         'fields'         => [
             'id'                => 'ID',

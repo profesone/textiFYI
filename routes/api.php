@@ -13,7 +13,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'middleware' => ['auth:sanctum']
     Route::apiResource('clients', ClientApiController::class);
 
     // Keywords
-    Route::apiResource('keywords', KeywordApiController::class);
+    Route::apiResource('keywords', KeywordApiController::class, ['only' => ['index']]);
 
     // Text Response
     Route::apiResource('text-responses', TextResponseApiController::class);

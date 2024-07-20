@@ -41,9 +41,6 @@ class Edit extends Component
                 'required',
                 'unique:textifyi_numbers,textifyi_numbers,' . $this->textifyiNumber->id,
             ],
-            'textifyiNumber.used' => [
-                'boolean',
-            ],
             'textifyiNumber.team_id' => [
                 'integer',
                 'exists:teams,id',

@@ -31,9 +31,6 @@ class UpdateTextifyiNumberRequest extends FormRequest
                 'required',
                 'unique:textifyi_numbers,textifyi_numbers,' . request()->route('textifyiNumber')->id,
             ],
-            'used' => [
-                'boolean',
-            ],
             'team_id' => [
                 'integer',
                 'exists:teams,id',

@@ -4,13 +4,7 @@
         <div class="flex flex-wrap items-center md:justify-between justify-center">
             <div class="w-full md:w-4/12 px-4">
                 <div class="text-sm text-blueGray-500 font-semibold py-1 text-center md:text-left">
-                    <div class="hidden">
-                        Copyright © <span id="get-current-year">{{ date('Y') }}</span>
-                    </div>
-                    Theme <a href="https://www.creative-tim.com/product/notus-js" class="text-blueGray-500 hover:text-blueGray-700 text-sm font-semibold py-1" target="_blank">NotusJS</a> by
-                    <a href="https://www.creative-tim.com" class="text-blueGray-500 hover:text-blueGray-700 text-sm font-semibold py-1" target="_blank">
-                        Creative Tim
-                    </a>
+                    TextiFYI is © & ™ TechStudios LLC <span id="get-current-year">{{ date('Y') }}</span>
                 </div>
             </div>
             <div class="w-full md:w-8/12 px-4">

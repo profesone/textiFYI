@@ -102,6 +102,11 @@ class UpdateClientRequest extends FormRequest
             'default_email_notification' => [
                 'boolean',
             ],
+            'team_id' => [
+                'integer',
+                'exists:teams,id',
+                'nullable',
+            ],
         ];
     }
 }

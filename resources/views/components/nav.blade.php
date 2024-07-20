@@ -2,7 +2,9 @@
     <div class="w-full mx-auto items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
         <a class="text-white text-sm uppercase hidden lg:inline-block font-semibold" href="#">
             {{-- Dashboard --}}
-            Hello {{ auth()->user()->name }}
+            @if(file_exists(app_path('Http/Livewire/LanguageSwitcher.php')))
+                <livewire:my-agency />
+            @endif
         </a>
 
         {{-- If you use user icon and menu add margin mr-3 to search --}}

@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('content')
+@if(auth()->user()->is_admin)
 <div class="flex flex-wrap">
     {{-- Number block --}}
     <div class="{{ $settings1['column_class'] }} px-4">
@@ -117,6 +118,7 @@
     </div>
 
 </div>
+@endif
 @endsection
 @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>

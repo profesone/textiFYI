@@ -148,42 +148,26 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 35,
-                'title' => 'keyword_create',
-            ],
-            [
-                'id'    => 36,
-                'title' => 'keyword_edit',
-            ],
-            [
-                'id'    => 37,
-                'title' => 'keyword_show',
-            ],
-            [
-                'id'    => 38,
-                'title' => 'keyword_delete',
-            ],
-            [
-                'id'    => 39,
                 'title' => 'keyword_access',
             ],
             [
-                'id'    => 40,
+                'id'    => 36,
                 'title' => 'text_response_create',
             ],
             [
-                'id'    => 41,
+                'id'    => 37,
                 'title' => 'text_response_edit',
             ],
             [
-                'id'    => 42,
+                'id'    => 38,
                 'title' => 'text_response_show',
             ],
             [
-                'id'    => 43,
+                'id'    => 39,
                 'title' => 'text_response_delete',
             ],
             [
-                'id'    => 44,
+                'id'    => 40,
                 'title' => 'text_response_access',
             ],
         ];

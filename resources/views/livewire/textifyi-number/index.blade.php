@@ -34,7 +34,7 @@
     <div wire:loading.delay>
         Loading...
     </div>
-
+{{ auth()->user()->owned_team }}
     <div class="overflow-hidden">
         <div class="overflow-x-auto">
             <table class="table table-index w-full">
@@ -45,10 +45,6 @@
                         <th>
                             {{ trans('cruds.textifyiNumber.fields.textifyi_numbers') }}
                             @include('components.table.sort', ['field' => 'textifyi_numbers'])
-                        </th>
-                        <th>
-                            {{ trans('cruds.textifyiNumber.fields.used') }}
-                            @include('components.table.sort', ['field' => 'used'])
                         </th>
                         <th>
                             {{ trans('cruds.textifyiNumber.fields.created_at') }}
@@ -70,9 +66,6 @@
                             </td>
                             <td>
                                 {{ $textifyiNumber->textifyi_numbers }}
-                            </td>
-                            <td>
-                                <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $textifyiNumber->used ? 'checked' : '' }}>
                             </td>
                             <td>
                                 {{ $textifyiNumber->created_at }}

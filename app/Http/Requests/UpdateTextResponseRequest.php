@@ -33,11 +33,11 @@ class UpdateTextResponseRequest extends FormRequest
             'campaign' => [
                 'string',
                 'max:100',
-                'required',
+                'nullable',
             ],
             'response' => [
                 'string',
-                'required',
+                'nullable',
             ],
             'notes' => [
                 'string',
@@ -61,7 +61,7 @@ class UpdateTextResponseRequest extends FormRequest
             'main_keyword_id' => [
                 'integer',
                 'exists:keywords,id',
-                'required',
+                'nullable',
             ],
             'start_date' => [
                 'nullable',

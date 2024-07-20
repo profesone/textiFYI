@@ -117,6 +117,13 @@ class Edit extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['texti_fyi_number'] = TextifyiNumber::pluck('textifyi_numbers', 'id')->toArray();
+        if (auth()->user()->is_admin) {
+            $this->listsForFields['texti_fyi_number'] = TextifyiNumber::whereNull('team_id')
+                ->pluck('textifyi_numbers', 'id')->toArray();
+        } else {
+            $this->listsForFields['texti_fyi_number'] = TextifyiNumber::where('team_id', auth()->user()->team_id)
+                ->pluck('textifyi_numbers', 'id')
+                ->toArray();
+        }
     }
 }

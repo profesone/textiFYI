@@ -67,12 +67,20 @@ class Index extends Component
 
     public function render()
     {
-        $query = TextifyiNumber::with(['team'])->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
-
+        if(auth()->user()->is_admin) {
+            $query = TextifyiNumber::advancedFilter([
+                    's' => $this->search ?: null,
+                    'order_column' => $this->sortBy,
+                    'order_direction' => $this->sortDirection,
+                ]);
+        } else {
+            $query = TextifyiNumber::where('team_id', auth()->user()->team_id)
+                ->advancedFilter([
+                    's' => $this->search ?: null,
+                    'order_column' => $this->sortBy,
+                    'order_direction' => $this->sortDirection,
+                ]);
+        }
         $textifyiNumbers = $query->paginate($this->perPage);
 
         return view('livewire.textifyi-number.index', compact('query', 'textifyiNumbers'));

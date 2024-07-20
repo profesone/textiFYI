@@ -47,7 +47,7 @@ class HomeController
         }
 
         $settings2 = [
-            'chart_title'           => 'Teams',
+            'chart_title'           => 'Agencies',
             'chart_type'            => 'number_block',
             'report_type'           => 'group_by_date',
             'model'                 => 'App\Models\Team',
@@ -158,6 +158,24 @@ class HomeController
 
         $chart5 = new LaravelChart($settings5);
 
-        return view('admin.home', compact('chart4', 'chart5', 'settings1', 'settings2', 'settings3'));
+        $settings6 = [
+            'chart_title'           => 'Campaigns',
+            'chart_type'            => 'pie',
+            'report_type'           => 'group_by_date',
+            'model'                 => 'App\Models\TextResponse',
+            'group_by_field'        => 'start_date',
+            'group_by_period'       => 'week',
+            'aggregate_function'    => 'count',
+            'filter_field'          => 'created_at',
+            'filter_period'         => 'year',
+            'group_by_field_format' => 'Y-m-d',
+            'column_class'          => 'w-full',
+            'entries_number'        => '5',
+            'translation_key'       => 'textResponse',
+        ];
+
+        $chart6 = new LaravelChart($settings6);
+
+        return view('admin.home', compact('chart4', 'chart5', 'chart6', 'settings1', 'settings2', 'settings3'));
     }
 }

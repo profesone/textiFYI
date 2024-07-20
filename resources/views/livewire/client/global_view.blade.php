@@ -1,11 +1,18 @@
 <div>
     @if ($responses)
+        <div>
+            <button class="btn btn-sm btn-success mr-2"
+                    wire:click="createResponse()">
+                    Create New Text Response <i class=" fas fa-plus"></i>
+            </button>
+        </div>
         <div class="overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="table table-index w-full">
                     <thead>
                     <tr>
-                        <th class="w-9">
+                        <th></th>
+                        <th>
                             {{ trans('cruds.textResponse.fields.active') }}
                         </th>
                         <th>
@@ -26,7 +33,7 @@
                         <th>
                             {{ trans('cruds.textResponse.fields.main_keyword') }}
                         </th>
-                        <th>
+                        <th class="w-12">
                             {{ trans('cruds.textResponse.fields.keywords') }}
                         </th>
                         <th>
@@ -41,17 +48,21 @@
                     @forelse($responses as $index => $textResponse)
                         <tr>
                             <td>
+                                <button class="btn btn-sm btn-rose mr-2 fas fa-trash"
+                                        wire:click="deleteResponse({{ $textResponse->id }})">
+                                </button>
+                            </td>
+                            <td>
                                 <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" {{ $textResponse->active ? 'checked' : '' }}>
                             </td>
                             <td> <!-- CAMPAIGN -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'campaign')
                                     <input type="text" wire:model="edited"/>
                                     <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
-                                            Save
                                         </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
                                                 wire:click="$toggle('editedRowField')">
                                         </button>
                                     </div>
@@ -71,11 +82,10 @@
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'response')
                                     <input type="text" wire:model="edited"/>
                                     <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
-                                            Save
                                         </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
                                                 wire:click="$toggle('editedRowField')">
                                         </button>
                                     </div>
@@ -95,11 +105,10 @@
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notes')
                                     <input type="text" wire:model="edited"/>
                                     <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
-                                            Save
                                         </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
                                                 wire:click="$toggle('editedRowField')">
                                         </button>
                                     </div>
@@ -119,11 +128,10 @@
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notification_main')
                                     <input type="text" wire:model="edited"/>
                                     <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
-                                            Save
                                         </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
                                                 wire:click="$toggle('editedRowField')">
                                         </button>
                                     </div>
@@ -140,17 +148,36 @@
                                 @endif
                             </td>
                             <td> <!-- NOTIFICATION 01 -->
-                                c
+                            @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notification_01')
+                                    <input type="text" wire:model="edited"/>
+                                    <div class="float-right">
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
+                                                wire:click="saveField({{$index}})">
+                                        </button>
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
+                                                wire:click="$toggle('editedRowField')">
+                                        </button>
+                                    </div>
+                                    @if ($errors->has('textResponse.' . $textResponse->id . '.notification_01'))
+                                        {{ $errors->first('textResponse.' . $textResponse->id . '.notification_01') }}
+                                    @endif
+                                @else
+                                    <button class="badge badge-relationship mr-2"
+                                            type="button"notes
+                                            wire:loading.attr="disabled"
+                                            wire:click="editedRowField({{ $textResponse->id }}, 'notification_01')">
+                                        {{ $textResponse->notification_01 }}
+                                    </button>
+                                @endif
                             </td>
                             <td> <!-- MAIN KEYWORD -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'mainKeyword')
                                     <input type="text" wire:model="edited"/>
                                     <div class="float-right">
-                                        <button class="btn btn-sm btn-indigo mr-2"
-                                                wire:click="saveField({{$index}})">
-                                            Save
+                                        <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
+                                                wire:click="addMainKeyword('{{ $edited }}', {{ $textResponse->id }})">
                                         </button>
-                                        <button class="btn btn-sm btn-rose mr-2 fas fa-window-close"
+                                        <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
                                                 wire:click="$toggle('editedRowField')">
                                         </button>
                                     </div>
@@ -159,39 +186,70 @@
                                             type="button"
                                             wire:loading.attr="disabled"
                                             wire:click="editedRowField({{ $textResponse->id }}, 'mainKeyword')">
-                                        {{ $textResponse->mainKeyword->keyword  }}
+                                        {{ $textResponse->mainKeyword->keyword ?? ''  }}
                                     </button>
                                 @endif
                             </td>
-                            <td> <!-- KEYWORDS -->
-                                <input type="text" wire:model="newKeyword"/>
-                                 @if(strlen({{ $newKeyword }}) > 1)
-                                    <button class="btn btn-sm btn-rose mr-2 fas fa-add"
-                                        wire:click="addKeyword({{ newKeyword }})">
-                                    </button>
-                                     <button class="btn btn-sm btn-rose mr-2 fas fa-close"
-                                        wire:click="reset({{ newKeyword }})">
-                                    </button>
+                            <td class="w-12"> <!-- KEYWORDS -->
+                                @if ($editedRowIndex === $textResponse->id && $editedRowField === 'keyword')
+                                    <input type="text" wire:model="newKeyword"/>
+                                    @if (strlen($newKeyword) > 1)
+                                        <div class="float-right">
+                                            <a class="btn btn-sm btn-success mr-2 fas fa-plus"
+                                                wire:click="addKeyword('{{ $newKeyword }}', {{ $textResponse->id }})">
+                                            </a>
+                                            <a class="btn btn-sm btn-rose mr-2 fas fa-times-circle" wire:click="reset({{ $newKeyword }})"></a>
+                                            <br>
+                                        </div>
+                                     @endif
                                 @endif
+                                @if(!$editedRowField)
+                                    <a class="btn btn-sm btn-success mr-2 fas fa-plus"
+                                        wire:click="editedRowField({{ $textResponse->id }}, 'keyword')">
+                                    </a>
+                                @endif
+
                                 @foreach($textResponse->keywords as $key => $entry)
-                                    <button
-                                        model:click="saveKeyword({{ $entry->keyword }})"
-                                        class="badge badge-relationship mr-2">
-                                        <span wire:hover="removeKeyword({{ $key }})">x </span>
-                                        {{ $entry->keyword }}
-                                    </button>
+                                    <div>
+                                        <span class="badge badge-relationship mr-2">
+                                            <a class="text-rose-600 mr-2 fas fa-times-circle float-left"
+                                            wire:click="removeKeyword({{ $textResponse->id }}, {{ $entry->id }})"></a>
+                                            {{ $entry->keyword }}
+                                        </span>
+                                    </div>
                                 @endforeach
                             </td>
                             <td> <!-- SCHEDULES -->
+
+                                @if ($editedRowIndex === $textResponse->id && $editedRowField === 'start_date')
+                                    <input type="date" wire:model="start_date"/> Start Date<br>
+                                    <input type="date" wire:model="end_date"/> End Date
+                                    @if($start_date > 0)
+                                        <div class="float-right">
+                                            <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
+                                                    wire:click="updateSchedule({{ $textResponse->id }})">
+                                            </button>
+                                            <button class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
+                                                    wire:click="$toggle('editedRowField')">
+                                            </button>
+                                        </div>
+                                    @endif
+                                @else
                                 @if (empty($textResponse->start_date) || empty($textResponse->end_date))
-                                    <button class="btn btn-sm btn-rose mr-2" type="button" wire:loading.attr="disabled">
+                                    <button class="btn btn-sm btn-rose mr-2"
+                                        wire:loading.attr="disabled"
+                                        wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">
                                         Not Scheduled
                                     </button>
-                                @else
-                                    Started {{ $textResponse->start_date }} <br>
-                                    Ends {{ $textResponse->end_date }}
+                                    @else
+                                        <button class="badge badge-relationship mr-2"
+                                            wire:loading.attr="disabled"
+                                            wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">Start {{ $textResponse->start_date }}</button> <br>
+                                        <button class="badge badge-relationship mr-2"
+                                            wire:loading.attr="disabled"
+                                            wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">Ends {{ $textResponse->end_date }}</button>
+                                    @endif
                                 @endif
-
                             </td>
                             <td>
                                 @if($textResponse->created_at)
