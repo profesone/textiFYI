@@ -39,7 +39,7 @@
             <div class="form-group">
                 @can('permission_edit')
                     <a href="{{ route('admin.permissions.edit', $permission) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        <i class="fas fa-edit"></i>
                     </a>
                 @endcan
                 <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">

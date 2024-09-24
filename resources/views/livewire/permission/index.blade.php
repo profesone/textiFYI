@@ -73,7 +73,7 @@
                                     @endcan
                                     @can('permission_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.permissions.edit', $permission) }}">
-                                            {{ trans('global.edit') }}
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('permission_delete')

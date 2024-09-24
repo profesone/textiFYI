@@ -53,15 +53,7 @@
                             @include('components.table.sort', ['field' => 'email'])
                         </th>
                         <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
-                            @include('components.table.sort', ['field' => 'email_verified_at'])
-                        </th>
-                        <th>
                             {{ trans('cruds.user.fields.roles') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.user.fields.locale') }}
-                            @include('components.table.sort', ['field' => 'locale'])
                         </th>
                         <th>
                             {{ trans('cruds.user.fields.team') }}
@@ -91,15 +83,9 @@
                                 </a>
                             </td>
                             <td>
-                                {{ $user->email_verified_at }}
-                            </td>
-                            <td>
                                 @foreach($user->roles as $key => $entry)
                                     <span class="badge badge-relationship">{{ $entry->title }}</span>
                                 @endforeach
-                            </td>
-                            <td>
-                                {{ $user->locale }}
                             </td>
                             <td>
                                 @if($user->team)
@@ -110,17 +96,17 @@
                                 <div class="flex justify-end">
                                     @can('user_show')
                                         <a class="btn btn-sm btn-info mr-2" href="{{ route('admin.users.show', $user) }}">
-                                            {{ trans('global.view') }}
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     @endcan
                                     @can('user_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.users.edit', $user) }}">
-                                            {{ trans('global.edit') }}
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('user_delete')
                                         <button class="btn btn-sm btn-rose mr-2" type="button" wire:click="confirm('delete', {{ $user->id }})" wire:loading.attr="disabled">
-                                            {{ trans('global.delete') }}
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     @endcan
                                 </div>

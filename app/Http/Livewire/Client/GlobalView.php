@@ -53,6 +53,7 @@ class GlobalView extends Component
 
     public function editedRowField($rowIndex, $fieldName)
     {
+        $this->newKeyword = '';
         $this->editedRowField = $fieldName;
         $this->editedRowIndex = $rowIndex;
 
@@ -82,7 +83,7 @@ class GlobalView extends Component
         DB::table('keyword_text_response')
             ->updateOrInsert(['text_response_id' => $responseId, 'keyword_id' => $keywordId], ['keyword_id' => $keywordId]);
 
-        $this->clearView();
+        $this->editedRowField = 'keyword';
     }
 
     public function addMainKeyword(string $keyword, int $responseId)

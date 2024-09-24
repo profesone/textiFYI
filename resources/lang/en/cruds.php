@@ -142,6 +142,7 @@ return [
             'company_name'                        => 'Company Name',
             'company_name_helper'                 => ' ',
             'main_contact_number'                 => 'Main Contact Number',
+            'contact_info'                        => 'Contact Info',
             'main_contact_number_helper'          => ' ',
             'email'                               => 'Email',
             'email_helper'                        => ' ',

@@ -79,17 +79,17 @@
                                 <div class="flex justify-end">
                                     @can('textifyi_number_show')
                                         <a class="btn btn-sm btn-info mr-2" href="{{ route('admin.textifyi-numbers.show', $textifyiNumber) }}">
-                                            {{ trans('global.view') }}
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     @endcan
                                     @can('textifyi_number_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.textifyi-numbers.edit', $textifyiNumber) }}">
-                                            {{ trans('global.edit') }}
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('textifyi_number_delete')
                                         <button class="btn btn-sm btn-rose mr-2" type="button" wire:click="confirm('delete', {{ $textifyiNumber->id }})" wire:loading.attr="disabled">
-                                            {{ trans('global.delete') }}
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     @endcan
                                 </div>

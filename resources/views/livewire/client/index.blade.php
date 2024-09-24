@@ -35,27 +35,15 @@
                 <thead>
                     <tr>
                         <th>
-                            {{ trans('cruds.client.fields.client_name') }}
-                            @include('components.table.sort', ['field' => 'client_name'])
+                            Client
                         </th>
                         <th>
-                            {{ trans('cruds.client.fields.company_name') }}
-                            @include('components.table.sort', ['field' => 'company_name'])
+                            Contact Info
                         </th>
                         <th>
-                            {{ trans('contact number') }}
-                            @include('components.table.sort', ['field' => 'main_contact_number'])
+                            TextiFYI #
                         </th>
-                        <th>
-                            {{ trans('cruds.client.fields.email') }}
-                            @include('components.table.sort', ['field' => 'email'])
-                        </th>
-                        <th>
-                            {{ trans('cruds.client.fields.texti_fyi_number') }}
-                            @include('components.table.sort', ['field' => 'texti_fyi_number.textifyi_numbers'])
-                        </th>
-                        <th>
-                        </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,14 +51,12 @@
                         <tr>
                             <td>
                                 {{ $client->client_name }}
-                            </td>
-                            <td>
-                                {{ $client->company_name }}
+                                @if($client->company_name)
+                                    <br> <span class="text-blueGray-500">{{ $client->company_name }}</span>
+                                @endif
                             </td>
                             <td>
                                 {{ $client->main_contact_number }}
-                            </td>
-                            <td>
                                 <a class="link-light-blue" href="mailto:{{ $client->email }}">
                                     <i class="far fa-envelope fa-fw">
                                     </i>

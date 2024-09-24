@@ -81,7 +81,7 @@
                                     @endcan
                                     @can('role_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.roles.edit', $role) }}">
-                                            {{ trans('global.edit') }}
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('role_delete')

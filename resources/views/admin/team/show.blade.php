@@ -49,7 +49,7 @@
             <div class="form-group">
                 @can('team_edit')
                     <a href="{{ route('admin.teams.edit', $team) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        <i class="fas fa-edit"></i>
                     </a>
                 @endcan
                 <a href="{{ route('admin.teams.index') }}" class="btn btn-secondary">

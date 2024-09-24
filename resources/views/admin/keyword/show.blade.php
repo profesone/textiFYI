@@ -59,7 +59,7 @@
             <div class="form-group">
                 @can('keyword_edit')
                     <a href="{{ route('admin.keywords.edit', $keyword) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        <i class="fas fa-edit"></i>
                     </a>
                 @endcan
                 <a href="{{ route('admin.keywords.index') }}" class="btn btn-secondary">
