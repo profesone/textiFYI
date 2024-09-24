@@ -193,15 +193,14 @@
                             <td class="w-12"> <!-- KEYWORDS -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'keyword')
                                     <input type="text" wire:model="newKeyword"/>
-                                    @if (strlen($newKeyword) > 1)
                                         <div class="float-right">
                                             <a class="btn btn-sm btn-success mr-2 fas fa-plus"
-                                                wire:click="addKeyword('{{ $newKeyword }}', {{ $textResponse->id }})">
+                                                wire:click="addKeyword('{{ $newKeyword }}', {{ $textResponse->id }}), $set('editedRowField', 'keyword')">
                                             </a>
-                                            <a class="btn btn-sm btn-rose mr-2 fas fa-times-circle" wire:click="reset({{ $newKeyword }})"></a>
+                                            <a class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
+                                               wire:click="$set('editedRowField', 'textResponse->id')"></a>
                                             <br>
                                         </div>
-                                     @endif
                                 @endif
                                 @if(!$editedRowField)
                                     <a class="btn btn-sm btn-success mr-2 fas fa-plus"

@@ -38,8 +38,6 @@ class TextifyiNumberController extends Controller
     {
         abort_if(Gate::denies('textifyi_number_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $textifyiNumber->load('team');
-
         return view('admin.textifyi-number.show', compact('textifyiNumber'));
     }
 

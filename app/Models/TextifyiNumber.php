@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
-use App\Traits\Tenantable;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +17,6 @@ class TextifyiNumber extends Model
 
     protected $fillable = [
         'textifyi_numbers',
-        'team_id',
     ];
 
     public $orderable = [
@@ -55,10 +53,5 @@ class TextifyiNumber extends Model
     public function getDeletedAtAttribute($value)
     {
         return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function team()
-    {
-        return $this->belongsTo(Team::class);
     }
 }

@@ -71,6 +71,9 @@ class Edit extends Component
                 'exists:teams,id',
                 'nullable',
             ],
+            'user.is_approved' => [
+                'boolean',
+            ],
         ];
     }
 

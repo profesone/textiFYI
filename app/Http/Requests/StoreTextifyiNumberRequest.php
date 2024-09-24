@@ -31,11 +31,6 @@ class StoreTextifyiNumberRequest extends FormRequest
                 'required',
                 'unique:textifyi_numbers,textifyi_numbers',
             ],
-            'team_id' => [
-                'integer',
-                'exists:teams,id',
-                'nullable',
-            ],
         ];
     }
 }

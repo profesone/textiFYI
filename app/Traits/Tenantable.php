@@ -19,7 +19,6 @@ trait Tenantable
             }
 
             $model->team_id = auth()->user()->is_team_owner ? auth()->user()->ownedTeam->id : auth()->user()->team_id;
-            auth()->user()->update(['team_id' => $model->team_id]);
         });
 
         static::addGlobalScope('team_filter', function (Builder $query) {
@@ -28,7 +27,7 @@ trait Tenantable
             }
 
             $team_id = auth()->user()->is_team_owner ? auth()->user()->ownedTeam->id : auth()->user()->team_id;
-            auth()->user()->update(['team_id' => $team_id]);
+
             $query->where((new static())->getTable() . '.team_id', $team_id);
         });
     }

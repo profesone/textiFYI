@@ -11,8 +11,6 @@ class Create extends Component
 {
     public array $keywords = [];
 
-    public string $add_keyword = '';
-
     public array $listsForFields = [];
 
     public TextResponse $textResponse;
@@ -29,41 +27,6 @@ class Create extends Component
         return view('livewire.text-response.create');
     }
 
-    public function add()
-    {
-        $this->addButton = "Processing..";
-
-
-        // Add the string keyword if it's not already there.
-        if (
-            Keyword::where('keyword', $this->add_keyword)->where('client_id', $this->textResponse->client_id)->first()
-            || "Keyword already in list." === $this->add_keyword
-        )
-        {
-            $this->add_keyword = "Keyword already in list.";
-            return;
-        }
-
-        // Update the current keywords array
-        if (!empty($this->add_keyword))
-        {
-            $keyword = new Keyword;
-            $keyword->client_id = $this->textResponse->client_id;
-            $keyword->keyword = strtolower($this->add_keyword);
-            $keyword->save();
-
-            // Update the keyword list
-            $this->initListsForFields();
-
-            // Auto add to selected keywords
-            $this->listsForFields[] = $this->add_keyword;
-            $this->keywords[] = max(array_keys($this->listsForFields['keywords']));
-            $this->add_keyword = '';
-        }
-
-
-        $this->addButton = "Add";
-    }
     public function submit()
     {
         $this->validate();
@@ -71,7 +34,7 @@ class Create extends Component
         $this->textResponse->save();
         $this->textResponse->keywords()->sync($this->keywords);
 
-        return redirect()->route('admin.client.index');
+        return redirect()->route('admin.text-responses.index');
     }
 
     protected function rules(): array
@@ -85,11 +48,11 @@ class Create extends Component
             'textResponse.campaign' => [
                 'string',
                 'max:100',
-                'required',
+                'nullable',
             ],
             'textResponse.response' => [
                 'string',
-                'required',
+                'nullable',
             ],
             'textResponse.notes' => [
                 'string',
@@ -113,7 +76,7 @@ class Create extends Component
             'textResponse.main_keyword_id' => [
                 'integer',
                 'exists:keywords,id',
-                'required',
+                'nullable',
             ],
             'textResponse.start_date' => [
                 'nullable',

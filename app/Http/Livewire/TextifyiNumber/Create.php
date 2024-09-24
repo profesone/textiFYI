@@ -11,7 +11,7 @@ class Create extends Component
 
     public function mount(TextifyiNumber $textifyiNumber)
     {
-        $this->textifyiNumber       = $textifyiNumber;
+        $this->textifyiNumber = $textifyiNumber;
     }
 
     public function render()
@@ -36,11 +36,6 @@ class Create extends Component
                 'max:30',
                 'required',
                 'unique:textifyi_numbers,textifyi_numbers',
-            ],
-            'textifyiNumber.team_id' => [
-                'integer',
-                'exists:teams,id',
-                'nullable',
             ],
         ];
     }

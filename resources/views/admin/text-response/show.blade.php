@@ -159,7 +159,7 @@
             <div class="form-group">
                 @can('text_response_edit')
                     <a href="{{ route('admin.text-responses.edit', $textResponse) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        <i class="fas fa-edit"></i>
                     </a>
                 @endcan
                 <a href="{{ route('admin.text-responses.index') }}" class="btn btn-secondary">

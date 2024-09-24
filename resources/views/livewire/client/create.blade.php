@@ -21,8 +21,8 @@
         </div>
     </div>
     <div class="form-group {{ $errors->has('client.main_contact_number') ? 'invalid' : '' }}">
-        <label class="form-label required" for="main_contact_number">{{ trans('cruds.client.fields.main_contact_number') }}</label>
-        <input class="form-control" type="tel" pattern="[0-9]{10}" name="main_contact_number" id="main_contact_number" required wire:model.defer="client.main_contact_number">
+        <label class="form-label" for="main_contact_number">{{ trans('cruds.client.fields.main_contact_number') }}</label>
+        <textarea class="form-control" name="main_contact_number" id="main_contact_number" wire:model.defer="client.main_contact_number" rows="4"></textarea>
         <div class="validation-message">
             {{ $errors->first('client.main_contact_number') }}
         </div>
@@ -40,11 +40,11 @@
             {{ trans('cruds.client.fields.email_helper') }}
         </div>
     </div>
-    <div class="form-group {{ $errors->has('client.texti_fyi_number_id') ? 'invalid' : '' }}">
+    <div class="form-group {{ $errors->has('texti_fyi_number') ? 'invalid' : '' }}">
         <label class="form-label" for="texti_fyi_number">{{ trans('cruds.client.fields.texti_fyi_number') }}</label>
-        <x-select-list class="form-control" id="texti_fyi_number" name="texti_fyi_number" :options="$this->listsForFields['texti_fyi_number']" wire:model="client.texti_fyi_number_id" />
+        <x-select-list class="form-control" id="texti_fyi_number" name="texti_fyi_number" wire:model="texti_fyi_number" :options="$this->listsForFields['texti_fyi_number']" multiple />
         <div class="validation-message">
-            {{ $errors->first('client.texti_fyi_number_id') }}
+            {{ $errors->first('texti_fyi_number') }}
         </div>
         <div class="help-block">
             {{ trans('cruds.client.fields.texti_fyi_number_helper') }}
@@ -218,6 +218,16 @@
         </div>
         <div class="help-block">
             {{ trans('cruds.client.fields.default_email_notification_helper') }}
+        </div>
+    </div>
+    <div class="form-group {{ $errors->has('client.team_id') ? 'invalid' : '' }}">
+        <label class="form-label" for="team">{{ trans('cruds.client.fields.team') }}</label>
+        <x-select-list class="form-control" id="team" name="team" :options="$this->listsForFields['team']" wire:model="client.team_id" />
+        <div class="validation-message">
+            {{ $errors->first('client.team_id') }}
+        </div>
+        <div class="help-block">
+            {{ trans('cruds.client.fields.team_helper') }}
         </div>
     </div>
 

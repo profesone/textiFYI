@@ -56,10 +56,9 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function mount($client_name = '')
+    public function mount()
     {
         $this->sortBy            = 'client.client_name';
-        $this->search            = $client_name;
         $this->sortDirection     = 'desc';
         $this->perPage           = 100;
         $this->paginationOptions = config('project.pagination.options');

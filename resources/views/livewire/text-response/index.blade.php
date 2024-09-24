@@ -142,7 +142,7 @@
                                     @endcan
                                     @can('text_response_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.text-responses.edit', $textResponse) }}">
-                                            {{ trans('global.edit') }}
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
                                     @can('text_response_delete')

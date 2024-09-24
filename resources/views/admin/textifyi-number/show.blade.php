@@ -81,7 +81,7 @@
             <div class="form-group">
                 @can('textifyi_number_edit')
                     <a href="{{ route('admin.textifyi-numbers.edit', $textifyiNumber) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        <i class="fas fa-edit"></i>
                     </a>
                 @endcan
                 <a href="{{ route('admin.textifyi-numbers.index') }}" class="btn btn-secondary">
