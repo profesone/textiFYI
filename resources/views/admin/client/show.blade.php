@@ -243,16 +243,27 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="text-sm">
+                    Created {{ $client->updated_at }}
+                    @if($client->deleted_at)
+                        Deleted on {{ $client->deleted_at }}
+                    @endif
+                </div>
             </div>
             <div class="form-group">
                 @can('client_edit')
                     <a href="{{ route('admin.clients.edit', $client) }}" class="btn btn-indigo mr-2">
-                        {{ trans('global.edit') }}
+                        {{ trans('global.edit') }} Client
                     </a>
                 @endcan
                 <a href="{{ route('admin.clients.index') }}" class="btn btn-secondary">
                     {{ trans('global.back') }}
                 </a>
+            </div>
+            <div class="pt-6"><hr class="max-w-full"></div>
+            <div>
+                <h6 class="card-title" style="padding-top: 30px">Text Responses</h6>
+                @livewire('client.global-view',[$client->id])
             </div>
         </div>
     </div>
