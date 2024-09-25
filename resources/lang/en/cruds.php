@@ -141,6 +141,7 @@ return [
             'company_name_helper'                 => ' ',
             'main_contact_number'                 => 'Main Contact Number',
             'main_contact_number_helper'          => 'Add multiple number separated by a comma (,)',
+            'contact_info'                        => 'Contact Info',
             'email'                               => 'Email',
             'email_helper'                        => ' ',
             'default_message'                     => 'Default Message',

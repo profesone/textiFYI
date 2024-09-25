@@ -53,6 +53,7 @@ class GlobalView extends Component
 
     public function editedRowField($rowIndex, $fieldName)
     {
+        $this->newKeyword = '';
         $this->editedRowField = $fieldName;
         $this->editedRowIndex = $rowIndex;
 
@@ -86,7 +87,6 @@ class GlobalView extends Component
 
         // Clear input box
         $this->newKeyword = '';
-
     }
 
     public function addMainKeyword(string $keyword, int $responseId)
