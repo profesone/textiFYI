@@ -19,7 +19,8 @@ class Create extends Component
 
     public function mount(User $user)
     {
-        $this->user = $user;
+        $this->user              = $user;
+        $this->user->is_approved = false;
         $this->initListsForFields();
     }
 
@@ -70,6 +71,9 @@ class Create extends Component
                 'integer',
                 'exists:teams,id',
                 'nullable',
+            ],
+            'user.is_approved' => [
+                'boolean',
             ],
         ];
     }

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TextResponse extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes, Auditable;
+    use HasFactory, HasAdvancedFilter, SoftDeletes, Tenantable, Auditable;
 
     public $table = 'text_responses';
 

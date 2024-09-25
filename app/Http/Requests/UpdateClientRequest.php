@@ -35,17 +35,19 @@ class UpdateClientRequest extends FormRequest
             ],
             'main_contact_number' => [
                 'string',
-                'required',
+                'nullable',
             ],
             'email' => [
                 'email:rfc',
                 'required',
                 'unique:clients,email,' . request()->route('client')->id,
             ],
-            'texti_fyi_number_id' => [
+            'texti_fyi_number' => [
+                'array',
+            ],
+            'texti_fyi_number.*.id' => [
                 'integer',
                 'exists:textifyi_numbers,id',
-                'nullable',
             ],
             'default_message' => [
                 'string',

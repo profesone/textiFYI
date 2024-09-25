@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Client;
 
 use App\Models\Client;
+use App\Models\Team;
 use App\Models\TextifyiNumber;
 use Livewire\Component;
 
@@ -12,9 +13,12 @@ class Edit extends Component
 
     public array $listsForFields = [];
 
+    public array $texti_fyi_number = [];
+
     public function mount(Client $client)
     {
-        $this->client = $client;
+        $this->client           = $client;
+        $this->texti_fyi_number = $this->client->textiFyiNumber()->pluck('id')->toArray();
         $this->initListsForFields();
     }
 
@@ -28,6 +32,7 @@ class Edit extends Component
         $this->validate();
 
         $this->client->save();
+        $this->client->textiFyiNumber()->sync($this->texti_fyi_number);
 
         return redirect()->route('admin.clients.index');
     }
@@ -45,17 +50,19 @@ class Edit extends Component
             ],
             'client.main_contact_number' => [
                 'string',
-                'required',
+                'nullable',
             ],
             'client.email' => [
                 'email:rfc',
                 'required',
                 'unique:clients,email,' . $this->client->id,
             ],
-            'client.texti_fyi_number_id' => [
+            'texti_fyi_number' => [
+                'array',
+            ],
+            'texti_fyi_number.*.id' => [
                 'integer',
                 'exists:textifyi_numbers,id',
-                'nullable',
             ],
             'client.default_message' => [
                 'string',
@@ -112,18 +119,17 @@ class Edit extends Component
             'client.default_email_notification' => [
                 'boolean',
             ],
+            'client.team_id' => [
+                'integer',
+                'exists:teams,id',
+                'nullable',
+            ],
         ];
     }
 
     protected function initListsForFields(): void
     {
-        if (auth()->user()->is_admin) {
-            $this->listsForFields['texti_fyi_number'] = TextifyiNumber::whereNull('team_id')
-                ->pluck('textifyi_numbers', 'id')->toArray();
-        } else {
-            $this->listsForFields['texti_fyi_number'] = TextifyiNumber::where('team_id', auth()->user()->team_id)
-                ->pluck('textifyi_numbers', 'id')
-                ->toArray();
-        }
+        $this->listsForFields['texti_fyi_number'] = TextifyiNumber::pluck('textifyi_numbers', 'id')->toArray();
+        $this->listsForFields['team']             = Team::pluck('name', 'id')->toArray();
     }
 }

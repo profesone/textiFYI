@@ -55,9 +55,11 @@
                             <td>
                                 <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" {{ $textResponse->active ? 'checked' : '' }}>
                             </td>
-                            <td> <!-- CAMPAIGN -->
+                            <td wire:click="$set('edited','')"> <!-- CAMPAIGN -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'campaign')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           placeholder="{{ $textResponse->campaign ?? '' }}"
+                                           wire:model="edited"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
@@ -78,9 +80,11 @@
                                    </button>
                                 @endif
                             </td>
-                            <td> <!-- RESPONSE TEXT -->
+                            <td wire:click="$set('edited','')"> <!-- RESPONSE TEXT -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'response')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           placeholder="{{ $textResponse->response ?? '' }}"
+                                           wire:model="edited"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
@@ -101,9 +105,12 @@
                                     </button>
                                 @endif
                             </td>
-                            <td>
+                            <td wire:click="$set('edited','')">
+                                <!-- NOTES -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notes')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           placeholder="{{ $textResponse->notes ?? '' }}"
+                                           wire:model="edited"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
@@ -124,9 +131,12 @@
                                     </button>
                                 @endif
                             </td>
-                            <td> <!-- NOTIFICATION MAIN -->
+                            <td wire:click="$set('edited','')">
+                                <!-- NOTIFICATION MAIN -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notification_main')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           placeholder="{{ $textResponse->notification_main ?? '' }}"
+                                           wire:model="edited"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
@@ -147,9 +157,12 @@
                                     </button>
                                 @endif
                             </td>
-                            <td> <!-- NOTIFICATION 01 -->
+                            <td wire:click="$set('edited','')">
+                                <!-- NOTIFICATION 01 -->
                             @if ($editedRowIndex === $textResponse->id && $editedRowField === 'notification_01')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           placeholder="{{ $textResponse->notification_01 ?? '' }}"
+                                           wire:model="edited"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="saveField({{$index}})">
@@ -170,9 +183,12 @@
                                     </button>
                                 @endif
                             </td>
-                            <td> <!-- MAIN KEYWORD -->
+                            <td wire:click="$set('edited','')">
+                                <!-- MAIN KEYWORD -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'mainKeyword')
-                                    <input type="text" wire:model="edited"/>
+                                    <input type="text"
+                                           wire:model="edited"
+                                           placeholder="{{ $textResponse->mainKeyword->keyword ?? ''  }}"/>
                                     <div class="float-right">
                                         <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                 wire:click="addMainKeyword('{{ $edited }}', {{ $textResponse->id }})">
@@ -192,13 +208,11 @@
                             </td>
                             <td class="w-12"> <!-- KEYWORDS -->
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'keyword')
-                                    <input type="text" wire:model="newKeyword"/>
-                                        <div class="float-right">
+                                    <input type="text" wire:model="newKeyword" />
+                                        <div class="float-right" wire:poll.250ms>
                                             <a class="btn btn-sm btn-success mr-2 fas fa-plus"
-                                                wire:click="addKeyword('{{ $newKeyword }}', {{ $textResponse->id }}), $set('editedRowField', 'keyword')">
+                                                wire:click="addKeyword('{{ $newKeyword }}', {{ $textResponse->id }})">
                                             </a>
-                                            <a class="btn btn-sm btn-rose mr-2 fas fa-times-circle"
-                                               wire:click="$set('editedRowField', 'textResponse->id')"></a>
                                             <br>
                                         </div>
                                 @endif
@@ -218,13 +232,15 @@
                                     </div>
                                 @endforeach
                             </td>
-                            <td> <!-- SCHEDULES -->
+                            <td class="text-sm"> <!-- SCHEDULES -->
 
                                 @if ($editedRowIndex === $textResponse->id && $editedRowField === 'start_date')
-                                    <input type="date" wire:model="start_date"/> Start Date<br>
-                                    <input type="date" wire:model="end_date"/> End Date
+                                    Start Date<br>
+                                    <input type="date" wire:model="start_date"/>
+                                    <br>End Date<br>
+                                    <input type="date" wire:model="end_date"/>
                                     @if($start_date > 0)
-                                        <div class="float-right">
+                                        <div class="float-left">
                                             <button class="btn btn-sm btn-indigo mr-2 fas fa-save"
                                                     wire:click="updateSchedule({{ $textResponse->id }})">
                                             </button>
@@ -243,7 +259,8 @@
                                     @else
                                         <button class="badge badge-relationship mr-2"
                                             wire:loading.attr="disabled"
-                                            wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">Start {{ $textResponse->start_date }}</button> <br>
+                                            wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">Start {{ $textResponse->start_date }}</button>
+                                        <br>
                                         <button class="badge badge-relationship mr-2"
                                             wire:loading.attr="disabled"
                                             wire:click="editedRowField({{ $textResponse->id }}, 'start_date')">Ends {{ $textResponse->end_date }}</button>

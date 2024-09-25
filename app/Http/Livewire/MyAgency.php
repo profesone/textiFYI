@@ -11,7 +11,7 @@ class MyAgency extends Component
 
     public function mount()
     {
-        $this->agency = Team::find(auth()->user()->team_id)->name;
+        $this->agency = Team::find(auth()->user()->team_id)->name ?? '';
     }
 
     public function render()

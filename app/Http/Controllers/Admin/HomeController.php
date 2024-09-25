@@ -47,7 +47,7 @@ class HomeController
         }
 
         $settings2 = [
-            'chart_title'           => 'Agencies',
+            'chart_title'           => 'Teams',
             'chart_type'            => 'number_block',
             'report_type'           => 'group_by_date',
             'model'                 => 'App\Models\Team',

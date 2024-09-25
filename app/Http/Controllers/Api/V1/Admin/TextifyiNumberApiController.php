@@ -17,7 +17,7 @@ class TextifyiNumberApiController extends Controller
     {
         abort_if(Gate::denies('textifyi_number_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new TextifyiNumberResource(TextifyiNumber::with(['team'])->get());
+        return new TextifyiNumberResource(TextifyiNumber::all());
     }
 
     public function store(StoreTextifyiNumberRequest $request)
@@ -33,7 +33,7 @@ class TextifyiNumberApiController extends Controller
     {
         abort_if(Gate::denies('textifyi_number_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new TextifyiNumberResource($textifyiNumber->load(['team']));
+        return new TextifyiNumberResource($textifyiNumber);
     }
 
     public function update(UpdateTextifyiNumberRequest $request, TextifyiNumber $textifyiNumber)

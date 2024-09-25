@@ -23,6 +23,7 @@ class ClientApiController extends Controller
     public function store(StoreClientRequest $request)
     {
         $client = Client::create($request->validated());
+        $client->textiFyiNumber()->sync($request->input('textiFyiNumber', []));
 
         return (new ClientResource($client))
             ->response()
@@ -39,6 +40,7 @@ class ClientApiController extends Controller
     public function update(UpdateClientRequest $request, Client $client)
     {
         $client->update($request->validated());
+        $client->textiFyiNumber()->sync($request->input('textiFyiNumber', []));
 
         return (new ClientResource($client))
             ->response()

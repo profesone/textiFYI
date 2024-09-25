@@ -61,7 +61,6 @@ class Client extends Model
         'company_name',
         'main_contact_number',
         'email',
-        'texti_fyi_number_id',
         'default_message',
         'default_request_message',
         'default_zipcode_message',
@@ -88,7 +87,6 @@ class Client extends Model
         'company_name',
         'main_contact_number',
         'email',
-        'texti_fyi_number.textifyi_numbers',
         'default_message',
         'default_request_message',
         'default_zipcode_message',
@@ -119,7 +117,7 @@ class Client extends Model
 
     public function textiFyiNumber()
     {
-        return $this->belongsTo(TextifyiNumber::class);
+        return $this->belongsToMany(TextifyiNumber::class);
     }
 
     public function getCreatedAtAttribute($value)
