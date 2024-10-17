@@ -3,7 +3,7 @@
         <a class="text-white text-sm uppercase hidden lg:inline-block font-semibold" href="#">
             {{-- Dashboard --}}
             @if(file_exists(app_path('Http/Livewire/LanguageSwitcher.php')))
-                <livewire:my-agency />
+                {{ auth()->user()->name }} : {{ auth()->user()->ownedTeam->name }}
             @endif
         </a>
 

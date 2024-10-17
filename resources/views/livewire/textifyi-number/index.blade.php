@@ -1,6 +1,7 @@
 <div>
     <div class="card-controls sm:flex">
         <div class="w-full sm:w-1/2">
+            {{auth()->user()->ownedTeam->id}}
             Per page:
             <select wire:model="perPage" class="form-select w-full sm:w-1/6">
                 @foreach($paginationOptions as $value)
