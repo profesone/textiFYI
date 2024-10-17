@@ -47,7 +47,7 @@
                             @include('components.table.sort', ['field' => 'textifyi_numbers'])
                         </th>
                         <th>
-                            {{ trans('cruds.textifyiNumber.fields.agency') }}
+                            {{ trans('Agency') }}
                             @include('components.table.sort', ['field' => 'agency.name'])
                         </th>
                         <th>

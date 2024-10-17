@@ -107,7 +107,7 @@
                     </li>
                 @endcan
                 @can('client_access')
-                    @if(!empty(auth()->user()->team_id) || auth()->user()->is_admin)
+                    @if(request()->is("admin/teams*") || !empty(trans('cruds.team.title')))
                     <li class="items-center">
                         <a class="{{ request()->is("admin/clients*") ? "sidebar-nav-active" : "sidebar-nav" }}" href="{{ route("admin.clients.index") }}">
                             <i class="fa-fw c-sidebar-nav-icon fas fa-users">
@@ -117,7 +117,7 @@
                     </li>
                     @else
                         <li>
-                            Please got to "My Agency" below and create a team name.
+                            Please go to "Agency Profile" below and create a team name.
                         </li>
                     @endif
                 @endcan

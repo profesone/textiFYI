@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="form-group {{ $errors->has('textifyiNumber.agency_id') ? 'invalid' : '' }}">
-        <label class="form-label" for="agency">{{ trans('cruds.textifyiNumber.fields.agency') }}</label>
+        <label class="form-label" for="agency">{{ trans('Agency') }}</label>
         <x-select-list class="form-control" id="agency" name="agency" :options="$this->listsForFields['agency']" wire:model="textifyiNumber.agency_id" />
         <div class="validation-message">
             {{ $errors->first('textifyiNumber.agency_id') }}
