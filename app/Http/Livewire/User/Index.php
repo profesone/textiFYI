@@ -67,11 +67,22 @@ class Index extends Component
 
     public function render()
     {
-        $query = User::with(['roles', 'team'])->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        if (auth()->user()->is_admin) {
+            $query = User::with(['roles', 'team'])->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
+        }
+
+        if (!auth()->user()->is_admin) {
+            $query = User::with(['roles', 'team'])->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ])
+            ->where("team_id", auth()->user()->ownedTeam->id);
+        }
 
         $users = $query->paginate($this->perPage);
 

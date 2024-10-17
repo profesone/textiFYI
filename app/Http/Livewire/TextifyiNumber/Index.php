@@ -67,11 +67,22 @@ class Index extends Component
 
     public function render()
     {
-        $query = TextifyiNumber::with(['agency'])->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        if (auth()->user()->is_admin) {
+            $query = TextifyiNumber::with(['agency'])->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
+        }
+
+        if (!auth()->user()->is_admin) {
+            $query = TextifyiNumber::with(['agency'])->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ])
+            ->where("agency_id", auth()->user()->ownedTeam->id);
+        }
 
         $textifyiNumbers = $query->paginate($this->perPage);
 
