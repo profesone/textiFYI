@@ -10,14 +10,14 @@
             {{ trans('cruds.textifyiNumber.fields.textifyi_numbers_helper') }}
         </div>
     </div>
-    <div class="form-group {{ $errors->has('textifyiNumber.team_id') ? 'invalid' : '' }}">
-        <label class="form-label" for="team">{{ trans('cruds.textifyiNumber.fields.team') }}</label>
-        <x-select-list class="form-control" id="team" name="team" :options="$this->listsForFields['team']" wire:model="textifyiNumber.team_id" />
+    <div class="form-group {{ $errors->has('textifyiNumber.agency_id') ? 'invalid' : '' }}">
+        <label class="form-label" for="agency">{{ trans('cruds.textifyiNumber.fields.agency') }}</label>
+        <x-select-list class="form-control" id="agency" name="agency" :options="$this->listsForFields['agency']" wire:model="textifyiNumber.agency_id" />
         <div class="validation-message">
-            {{ $errors->first('textifyiNumber.team_id') }}
+            {{ $errors->first('textifyiNumber.agency_id') }}
         </div>
         <div class="help-block">
-            {{ trans('cruds.textifyiNumber.fields.team_helper') }}
+            {{ trans('cruds.textifyiNumber.fields.agency_helper') }}
         </div>
     </div>
 

@@ -17,16 +17,7 @@ class TextifyiNumber extends Model
 
     protected $fillable = [
         'textifyi_numbers',
-    ];
-
-    public $orderable = [
-        'textifyi_numbers',
-        'created_at',
-    ];
-
-    public $filterable = [
-        'textifyi_numbers',
-        'created_at',
+        'agency_id',
     ];
 
     protected $dates = [
@@ -35,9 +26,26 @@ class TextifyiNumber extends Model
         'deleted_at',
     ];
 
+    public $orderable = [
+        'textifyi_numbers',
+        'agency.name',
+        'created_at',
+    ];
+
+    public $filterable = [
+        'textifyi_numbers',
+        'agency.name',
+        'created_at',
+    ];
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function agency()
+    {
+        return $this->belongsTo(Team::class);
     }
 
     public function getCreatedAtAttribute($value)

@@ -34,7 +34,7 @@
     <div wire:loading.delay>
         Loading...
     </div>
-{{ auth()->user()->owned_team }}
+
     <div class="overflow-hidden">
         <div class="overflow-x-auto">
             <table class="table table-index w-full">
@@ -47,12 +47,12 @@
                             @include('components.table.sort', ['field' => 'textifyi_numbers'])
                         </th>
                         <th>
-                            {{ trans('cruds.textifyiNumber.fields.created_at') }}
-                            @include('components.table.sort', ['field' => 'created_at'])
+                            {{ trans('cruds.textifyiNumber.fields.agency') }}
+                            @include('components.table.sort', ['field' => 'agency.name'])
                         </th>
                         <th>
-                            {{ trans('cruds.textifyiNumber.fields.team') }}
-                            @include('components.table.sort', ['field' => 'team.name'])
+                            {{ trans('cruds.textifyiNumber.fields.created_at') }}
+                            @include('components.table.sort', ['field' => 'created_at'])
                         </th>
                         <th>
                         </th>
@@ -68,28 +68,28 @@
                                 {{ $textifyiNumber->textifyi_numbers }}
                             </td>
                             <td>
-                                {{ $textifyiNumber->created_at }}
+                                @if($textifyiNumber->agency)
+                                    <span class="badge badge-relationship">{{ $textifyiNumber->agency->name ?? '' }}</span>
+                                @endif
                             </td>
                             <td>
-                                @if($textifyiNumber->team)
-                                    <span class="badge badge-relationship">{{ $textifyiNumber->team->name ?? '' }}</span>
-                                @endif
+                                {{ $textifyiNumber->created_at }}
                             </td>
                             <td>
                                 <div class="flex justify-end">
                                     @can('textifyi_number_show')
                                         <a class="btn btn-sm btn-info mr-2" href="{{ route('admin.textifyi-numbers.show', $textifyiNumber) }}">
-                                            <i class="fas fa-eye"></i>
+                                            {{ trans('global.view') }}
                                         </a>
                                     @endcan
                                     @can('textifyi_number_edit')
                                         <a class="btn btn-sm btn-success mr-2" href="{{ route('admin.textifyi-numbers.edit', $textifyiNumber) }}">
-                                            <i class="fas fa-edit"></i>
+                                            {{ trans('global.edit') }}
                                         </a>
                                     @endcan
                                     @can('textifyi_number_delete')
                                         <button class="btn btn-sm btn-rose mr-2" type="button" wire:click="confirm('delete', {{ $textifyiNumber->id }})" wire:loading.attr="disabled">
-                                            <i class="fas fa-trash"></i>
+                                            {{ trans('global.delete') }}
                                         </button>
                                     @endcan
                                 </div>

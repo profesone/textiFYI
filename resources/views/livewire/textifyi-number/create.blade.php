@@ -2,12 +2,22 @@
 
     <div class="form-group {{ $errors->has('textifyiNumber.textifyi_numbers') ? 'invalid' : '' }}">
         <label class="form-label required" for="textifyi_numbers">{{ trans('cruds.textifyiNumber.fields.textifyi_numbers') }}</label>
-        <input class="form-control" type="tel" pattern="[0-9]{10}" name="textifyi_numbers" id="textifyi_numbers" required wire:model.defer="textifyiNumber.textifyi_numbers">
+        <input class="form-control" type="text" name="textifyi_numbers" id="textifyi_numbers" required wire:model.defer="textifyiNumber.textifyi_numbers">
         <div class="validation-message">
             {{ $errors->first('textifyiNumber.textifyi_numbers') }}
         </div>
         <div class="help-block">
             {{ trans('cruds.textifyiNumber.fields.textifyi_numbers_helper') }}
+        </div>
+    </div>
+    <div class="form-group {{ $errors->has('textifyiNumber.agency_id') ? 'invalid' : '' }}">
+        <label class="form-label" for="agency">{{ trans('cruds.textifyiNumber.fields.agency') }}</label>
+        <x-select-list class="form-control" id="agency" name="agency" :options="$this->listsForFields['agency']" wire:model="textifyiNumber.agency_id" />
+        <div class="validation-message">
+            {{ $errors->first('textifyiNumber.agency_id') }}
+        </div>
+        <div class="help-block">
+            {{ trans('cruds.textifyiNumber.fields.agency_helper') }}
         </div>
     </div>
 

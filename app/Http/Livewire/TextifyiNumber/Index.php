@@ -67,7 +67,7 @@ class Index extends Component
 
     public function render()
     {
-        $query = TextifyiNumber::advancedFilter([
+        $query = TextifyiNumber::with(['agency'])->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

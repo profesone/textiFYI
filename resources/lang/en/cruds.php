@@ -65,15 +65,15 @@ return [
             'updated_at_helper'        => ' ',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
-            'team'                     => 'Team',
+            'team'                     => 'Agency',
             'team_helper'              => ' ',
             'is_approved'              => 'Is Approved',
             'is_approved_helper'       => ' ',
         ],
     ],
     'team' => [
-        'title'          => 'Teams',
-        'title_singular' => 'Team',
+        'title'          => 'Agencies',
+        'title_singular' => 'Agency',
         'fields'         => [
             'id'                => 'ID',
             'id_helper'         => ' ',

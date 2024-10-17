@@ -2,16 +2,20 @@
 
 namespace App\Http\Livewire\TextifyiNumber;
 
+use App\Models\Team;
 use App\Models\TextifyiNumber;
 use Livewire\Component;
 
 class Edit extends Component
 {
+    public array $listsForFields = [];
+
     public TextifyiNumber $textifyiNumber;
 
     public function mount(TextifyiNumber $textifyiNumber)
     {
         $this->textifyiNumber = $textifyiNumber;
+        $this->initListsForFields();
     }
 
     public function render()
@@ -37,6 +41,16 @@ class Edit extends Component
                 'required',
                 'unique:textifyi_numbers,textifyi_numbers,' . $this->textifyiNumber->id,
             ],
+            'textifyiNumber.agency_id' => [
+                'integer',
+                'exists:teams,id',
+                'nullable',
+            ],
         ];
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['agency'] = Team::pluck('name', 'id')->toArray();
     }
 }

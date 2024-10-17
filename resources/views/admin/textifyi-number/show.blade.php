@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <th>
-                                {{ trans('cruds.textifyiNumber.fields.team') }}
+                                {{ trans('Agency') }}
                             </th>
                             <td>
                                 @if($textifyiNumber->team)
