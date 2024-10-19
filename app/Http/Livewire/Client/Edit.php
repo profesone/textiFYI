@@ -127,6 +127,12 @@ class Edit extends Component
         ];
     }
 
+    public function setAgencyNumbers(int $agency_id) {
+        return TextifyiNumber::where('agency_id', '=', $agency_id)
+            ->pluck('textifyi_numbers', 'id')
+            ->toArray();
+    }
+
     protected function initListsForFields(): void
     {
         $this->listsForFields['texti_fyi_number'] = TextifyiNumber::pluck('textifyi_numbers', 'id')->toArray();

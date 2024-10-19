@@ -55,7 +55,21 @@
     </div>
     <div class="form-group {{ $errors->has('texti_fyi_number') ? 'invalid' : '' }}">
         <label class="form-label" for="texti_fyi_number">{{ trans('cruds.client.fields.texti_fyi_number') }}</label>
-        <x-select-list class="form-control" id="texti_fyi_number" name="texti_fyi_number" wire:model="texti_fyi_number" :options="$this->listsForFields['texti_fyi_number']" multiple />
+        @if(auth()->user()->is_admin)
+            <x-select-list
+                class="form-control"
+                id="texti_fyi_number"
+                name="texti_fyi_number"
+                wire:model="texti_fyi_number" :options="$this->listsForFields['texti_fyi_number']"
+                multiple />
+        @else
+            <x-select-list
+                class="form-control"
+                id="texti_fyi_number"
+                name="texti_fyi_number"
+                wire:model="texti_fyi_number" :options="$this->setAgencyNumbers(auth()->user()->ownedTeam->id)"
+                multiple />
+        @endif
         <div class="validation-message">
             {{ $errors->first('texti_fyi_number') }}
         </div>

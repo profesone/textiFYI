@@ -15,6 +15,8 @@ class Create extends Component
 
     public array $texti_fyi_number = [];
 
+    public integer $user_agency;
+
     public function mount(Client $client)
     {
         $this->client                               = $client;
@@ -139,9 +141,16 @@ class Create extends Component
         ];
     }
 
+    public function setAgencyNumbers(int $agency_id) {
+        return TextifyiNumber::where('agency_id', '=', $agency_id)
+            ->pluck('textifyi_numbers', 'id')
+            ->toArray();
+    }
+
     protected function initListsForFields(): void
     {
         $this->listsForFields['texti_fyi_number'] = TextifyiNumber::pluck('textifyi_numbers', 'id')->toArray();
-        $this->listsForFields['team']             = Team::pluck('name', 'id')->toArray();
+        $this->listsForFields['team'] = Team::pluck('name', 'id')->toArray();
+
     }
 }
