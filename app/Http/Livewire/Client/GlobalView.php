@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Client;
 
 use App\Models\Client;
+use App\Models\Team;
 use App\Models\TextResponse;
 use App\Models\Keyword;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Laravel\Prompts\Key;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -20,22 +22,31 @@ class GlobalView extends Component
     public $editedRowField = null;
     public $start_date = null;
     public $end_date = null;
-    private $teamId = null;
+    public $teamId = null;
 
     public function mount(Client $client)
     {
         $this->client = $client;
-        // Set Client's team if not set previously
-        if (auth()->user()->team_id){
-            User::where('id', $this->client->id)
-                ->update(['team_id' => auth()->user()->team_id]);
-        }
-        $this->edited = '';
-        $this->newKeyword = '';
-        $this->responses = TextResponse::where('client_id', $this->client->id)
-            ->where('team_id', $this->teamId)
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $this->setTeamId();
+        // Sets a team_id is one is not present
+        $this->teamId = (auth()->user()->team_id)
+            ? auth()->user()->team_id
+            : $this->setTeamId();
+
+        $this->clearView();
+    }
+
+    private function setTeamId(): int {
+        // Set Client's teamId property
+        $teamId = Team::where('owner_id', auth()->user()->id)->pluck('id')->first();
+
+        // Update User's team_id field
+        User::where('id', auth()->user()->id)->update(['team_id' => $teamId]);
+
+        // Update all TextResponse's team_id field for the same Client
+        TextResponse::where('client_id', $this->client->id)->update(['team_id' => $teamId]);
+
+        return $teamId;
     }
 
     public function render()
@@ -152,9 +163,17 @@ class GlobalView extends Component
         // Delete the entire response
         TextResponse::insert([
             'client_id' => $this->client->id,
-            'created_at' => now()->subMonth()
+            'created_at' => now()->subMonth(),
+            'team_id' => $this->setTeamId()
         ]);
         $this->clearView();
+    }
+
+    public function getResponses() : Collection
+    {
+        return TextResponse::where('client_id', $this->client->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
     }
 
     public function updateSchedule($responseId)
@@ -178,9 +197,6 @@ class GlobalView extends Component
         $this->newKeyword     = null;
         $this->start_date     = null;
         $this->end_date       = null;
-        $this->responses = TextResponse::where('client_id', $this->client->id)
-            ->where('team_id', $this->teamId)
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $this->responses      = $this->getResponses();
     }
 }
