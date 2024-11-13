@@ -8,11 +8,13 @@
                     {{ trans('cruds.client.title_singular') }}
                     {{ trans('global.list') }}
                 </h6>
-
                 @can('client_create')
+                    @if(auth()->user()->roles[0]->id != 3)
                     <a class="btn btn-indigo" href="{{ route('admin.clients.create') }}">
+
                         {{ trans('global.add') }} {{ trans('cruds.client.title_singular') }}
                     </a>
+                    @endif
                 @endcan
             </div>
         </div>
