@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Client;
 use App\Models\Client;
 use App\Models\Team;
 use App\Models\TextifyiNumber;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Edit extends Component
@@ -17,7 +18,7 @@ class Edit extends Component
 
     public function mount(Client $client)
     {
-        $this->client           = $client;
+        $this->client = $client;
         $this->texti_fyi_number = $this->client->textiFyiNumber()->pluck('id')->toArray();
         $this->initListsForFields();
     }
@@ -135,7 +136,10 @@ class Edit extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['texti_fyi_number'] = TextifyiNumber::pluck('textifyi_numbers', 'id')->toArray();
-        $this->listsForFields['team']             = Team::pluck('name', 'id')->toArray();
+        $this->listsForFields['texti_fyi_number'] = (Auth::user()->getIsAdminAttribute())
+        ? TextifyiNumber::whereNull('agency_id')->pluck('textifyi_numbers', 'id')->toArray()
+        : TextifyiNumber::where('agency_id', '=', Auth::user()->team_id)->pluck('textifyi_numbers', 'id')->toArray();
+        
+        $this->listsForFields['team'] = Team::pluck('name', 'id')->toArray();
     }
 }

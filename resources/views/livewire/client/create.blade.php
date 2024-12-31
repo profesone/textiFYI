@@ -249,8 +249,8 @@
         </div>
     </div>
     <div class="form-group {{ $errors->has('client.team_id') ? 'invalid' : '' }}">
-        <label class="form-label" for="team">{{ trans('cruds.client.fields.team') }}</label>
-        <x-select-list class="form-control" id="team" name="team" :options="$this->listsForFields['team']" wire:model="client.team_id" />
+        <label class="form-label required" for="team">{{ trans('cruds.client.fields.team') }}</label>
+        <x-select-list class="form-control required" id="team" name="team" required :options="$this->listsForFields['team']" wire:model="client.team_id" />
         <div class="validation-message">
             {{ $errors->first('client.team_id') }}
         </div>
