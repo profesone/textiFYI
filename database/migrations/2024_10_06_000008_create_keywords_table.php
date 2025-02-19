@@ -10,6 +10,9 @@ class CreateKeywordsTable extends Migration
     {
         Schema::create('keywords', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('text_response_id');
+            $table->foreign('text_response_id', 'response_fk_9314928')
+                ->references('id')->on('text_response');
             $table->string('keyword');
             $table->timestamps();
         });

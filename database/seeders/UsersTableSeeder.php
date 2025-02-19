@@ -16,9 +16,26 @@ class UsersTableSeeder extends Seeder
                 'email'             => 'admin@admin.com',
                 'password'          => bcrypt('password'),
                 'remember_token'    => null,
+                'role_id'           => 1,
                 'email_verified_at' => now(),
-                'is_approved'       => true,
-                'locale'            => '',
+            ],            
+            [
+                'id'                => 2,
+                'name'              => 'Agent',
+                'email'             => 'agent@agent.com',
+                'password'          => bcrypt('password'),
+                'remember_token'    => null,
+                'role_id'           => 2,
+                'email_verified_at' => now(),
+            ],
+            [
+                'id'                => 3,
+                'name'              => 'Client',
+                'email'             => 'client@client.com',
+                'password'          => bcrypt('password'),
+                'remember_token'    => null,
+                'role_id'           => 3,
+                'email_verified_at' => now(),
             ],
         ];
 

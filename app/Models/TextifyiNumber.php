@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TextifyiNumber extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $table = 'textifyi_numbers';
 
@@ -38,6 +38,17 @@ class TextifyiNumber extends Model
         'created_at',
     ];
 
+    // protected static function booted(): void
+    // {
+    //     if (!auth()->user()->isAdmin()) {
+    //         static::addGlobalScope('team', function (Builder $query) {
+    //             if (auth()->hasUser()) {
+    //                 $query->where('team_id', auth()->user()->team_id);
+    //             }
+    //         });
+    //     }
+    // }
+    
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

@@ -2,83 +2,125 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
-use App\Traits\HasTeam;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Hash;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
+class User extends Authenticatable
 {
-    use HasFactory, HasAdvancedFilter, Notifiable, HasTeam, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable, SoftDeletes;
 
-    public $table = 'users';
+    protected static function booted(): void
+    {
+        static::addGlobalScope('team', function (Builder $query) {
+            if (auth()->hasUser()) {
+                $query->where('team_id', auth()->user()->team_id);
+            }
+        });
+    }
 
-    protected $casts = [
-        'is_approved' => 'boolean',
-    ];
-
-    protected $hidden = [
-        'remember_token',
-        'password',
-    ];
-
-    protected $dates = [
-        'email_verified_at',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'locale',
+        'role_id',
+        'company_name',
+        'main_contact_number',
+        'default_message',
+        'default_request_message',
+        'default_zipcode_message',
+        'email_address_response',
+        'default_messages_module',
+        'default_message_notification',
+        'default_message_response',
+        'publish_keywords_module',
+        'leads_module',
+        'keyword_module',
+        'mls_listing_module',
+        'mls_agent_notification',
+        'tips_request_module',
+        'zip_code_module',
+        'default_zip_notification',
+        'email_address_module',
+        'default_email_notification',
         'team_id',
-        'is_approved',
     ];
 
-    public $orderable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'locale',
-        'team.name',
-        'is_approved',
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'roles.title',
-        'locale',
-        'team.name',
+    public static $roles = [
+        'admin' => 1,
+        'agent' => 2,
+        'client' => 3,
     ];
 
-    public function getIsAdminAttribute()
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        return $this->roles()->where('title', 'Admin')->exists();
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
-    public function scopeAdmins()
+    protected $casts = [
+        'default_messages_module'      => 'boolean',
+        'default_message_notification' => 'boolean',
+        'default_message_response'     => 'boolean',
+        'publish_keywords_module'      => 'boolean',
+        'leads_module'                 => 'boolean',
+        'keyword_module'               => 'boolean',
+        'mls_listing_module'           => 'boolean',
+        'mls_agent_notification'       => 'boolean',
+        'tips_request_module'          => 'boolean',
+        'zip_code_module'              => 'boolean',
+        'default_zip_notification'     => 'boolean',
+        'email_address_module'         => 'boolean',
+        'default_email_notification'   => 'boolean',
+    ];
+
+    public function isAdmin(): bool
     {
-        return $this->whereHas('roles', fn ($q) => $q->where('title', 'Admin'));
+        return $this->role_id === $this->roles['admin'];
     }
 
-    public function preferredLocale()
+    public function isAgent(): bool
     {
-        return $this->locale;
+        return $this->role_id === $this->roles['agent'];
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role_id === $this->roles['client'];
+    }
+
+    public function isTeamMate(int $team_id): bool
+    {
+        return $this->team_id === $team_id;
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -86,26 +128,9 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getEmailVerifiedAtAttribute($value)
+    public function textiFyiNumber()
     {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function setEmailVerifiedAtAttribute($value)
-    {
-        $this->attributes['email_verified_at'] = $value ? Carbon::createFromFormat(config('project.datetime_format'), $value)->format('Y-m-d H:i:s') : null;
-    }
-
-    public function setPasswordAttribute($input)
-    {
-        if ($input) {
-            $this->attributes['password'] = Hash::needsRehash($input) ? Hash::make($input) : $input;
-        }
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(TextifyiNumber::class);
     }
 
     public function getCreatedAtAttribute($value)
@@ -123,8 +148,8 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
     }
 
-    public function team()
+    public function team(): HasOne
     {
-        return $this->belongsTo(Team::class);
+        return $this->hasOne(Team::class);
     }
 }

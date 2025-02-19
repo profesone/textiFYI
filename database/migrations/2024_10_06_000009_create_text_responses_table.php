@@ -15,6 +15,7 @@ class CreateTextResponsesTable extends Migration
             $table->longText('notes')->nullable();
             $table->string('notification_main')->nullable();
             $table->string('notification_01')->nullable();
+            $table->json('keywords')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->boolean('active')->default(0)->nullable();

@@ -2,23 +2,22 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
-use App\Traits\Auditable;
-use App\Traits\Tenantable;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TextResponse extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes, Tenantable, Auditable;
+    use HasFactory, SoftDeletes;
 
     public $table = 'text_responses';
 
     protected $casts = [
         'active' => 'boolean',
+        'keywords' => 'array',
     ];
 
     protected $dates = [
@@ -29,18 +28,6 @@ class TextResponse extends Model
         'deleted_at',
     ];
 
-    public $orderable = [
-        'client.client_name',
-        'campaign',
-        'response',
-        'notification_main',
-        'notification_01',
-        'main_keyword.keyword',
-        'start_date',
-        'end_date',
-        'active',
-    ];
-
     protected $fillable = [
         'client_id',
         'campaign',
@@ -49,23 +36,23 @@ class TextResponse extends Model
         'notification_main',
         'notification_01',
         'main_keyword_id',
+        'keywords',
         'start_date',
         'end_date',
         'active',
     ];
 
-    public $filterable = [
-        'client.client_name',
-        'campaign',
-        'response',
-        'notification_main',
-        'notification_01',
-        'keywords.keyword',
-        'main_keyword.keyword',
-        'start_date',
-        'end_date',
-    ];
-
+    // protected static function booted(): void
+    // {
+    //     if (!auth()->user()->isAdmin()) {
+    //         static::addGlobalScope('team', function (Builder $query) {
+    //             if (auth()->hasUser()) {
+    //                 $query->where('team_id', auth()->user()->team_id);
+    //             }
+    //         });
+    //     }
+    // }
+    
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
@@ -73,17 +60,7 @@ class TextResponse extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function keywords()
-    {
-        return $this->belongsToMany(Keyword::class);
-    }
-
-    public function mainKeyword()
-    {
-        return $this->belongsTo(Keyword::class);
+        return $this->belongsTo(User::class, 'client_id', 'id');
     }
 
     public function getStartDateAttribute($value)

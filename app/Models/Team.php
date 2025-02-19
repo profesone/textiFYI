@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,25 +10,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Team extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $table = 'teams';
 
     protected $fillable = [
         'name',
-        'owner_id',
-    ];
-
-    public $orderable = [
-        'id',
-        'name',
-        'owner.name',
-    ];
-
-    public $filterable = [
-        'id',
-        'name',
-        'owner.name',
+        'user_id',
     ];
 
     protected $dates = [
@@ -43,7 +30,7 @@ class Team extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
