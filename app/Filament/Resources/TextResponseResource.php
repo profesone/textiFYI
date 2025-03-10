@@ -4,9 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TextResponseResource\Pages;
 use App\Filament\Resources\TextResponseResource\RelationManagers;
-use App\Models\Team;
 use App\Models\TextResponse;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,28 +23,15 @@ class TextResponseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('campaign'),
-                Forms\Components\Textarea::make('notes'),
                 Forms\Components\Textarea::make('response')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('notification_main')
-                    ->tel(),
-                Forms\Components\TextInput::make('notification_01')
-                    ->tel(),
-                Forms\Components\TagsInput::make('keywords')
+                Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),
+                Forms\Components\Textarea::make('notification_numbers'),
+                Forms\Components\TagsInput::make('keywords'),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('end_date'),
                 Forms\Components\Toggle::make('active'),
-                Forms\Components\Select::make('client.name')
-                    ->label('Client')
-                    ->options(User::pluck('name', 'id'))
-                    ->required(),
-                Forms\Components\Select::make('main_keyword_id'),
-                Forms\Components\Select::make('team.name')
-                    ->label('Team')
-                    ->options(Team::pluck('name', 'id'))
-                    ->required(),
             ]);
     }
 
@@ -54,14 +39,6 @@ class TextResponseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('campaign')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('notification_main')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('notification_01')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()
                     ->sortable(),
@@ -70,16 +47,6 @@ class TextResponseResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('client.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('main_keyword_id')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('keywords')
-                    ->badge()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('team.name')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -88,15 +55,13 @@ class TextResponseResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

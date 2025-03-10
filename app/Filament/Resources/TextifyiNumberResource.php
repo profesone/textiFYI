@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextifyiNumberResource\Pages;
 use App\Filament\Resources\TextifyiNumberResource\RelationManagers;
 use App\Models\TextifyiNumber;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,17 +23,12 @@ class TextifyiNumberResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('textifyi_numbers')
-                    ->label('TextiFYI Number')
-                    ->tel()
-                    ->suffixIcon('heroicon-m-phone')
-                    ->required(),
-                Forms\Components\Select::make('agency.name')
-                    ->label('Agent Name')
-                    ->options(User::whereNull('team_id')
-                        ->where('role_id', 2)
-                        ->pluck('name', 'id'))
-                    ->required(),
+                Forms\Components\TextInput::make('number')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('owner_id')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -42,8 +36,12 @@ class TextifyiNumberResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('textifyi_numbers')
-                    ->label('TextiFYI Number'),
+                Tables\Columns\TextColumn::make('number')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('owner_id')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -52,18 +50,13 @@ class TextifyiNumberResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('agency.name')
-                    ->label('Agent')
-                    ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
