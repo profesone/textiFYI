@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,8 +15,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique()->required();
             $table->integer('phone')->required();
+            $table->foreignId('team_id')->nullable()->index();
+            $table->enum('roles', ['admin', 'lead_agent', 'agent', 'client'])->default('client');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -36,6 +38,14 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('teams', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('name');
+            $table->unsignedBigInteger('owner_id')->required()->unique();
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('set null');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -46,5 +56,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('teams');
     }
 };

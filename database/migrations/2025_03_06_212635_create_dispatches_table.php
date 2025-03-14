@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,10 @@ return new class extends Migration
         Schema::create('dispatches', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('agent_id');
-            $table->string('title')->required();
+            $table->string('title')
+                ->placeholder('ex. Company Name or Agent\'s Campaign Name')
+                ->required();
+            $table->json('textifyi_numbers')->required()->unique();
             $table->longText('default_message')->nullable();
             $table->longText('default_request_message')->nullable();
             $table->longText('default_zipcode_message')->nullable();

@@ -10,6 +10,7 @@ class Dispatch extends Model
 {
     protected $fillable = [
         'title',
+        'textifyi_numbers',
         'default_message',
         'default_request_message',
         'default_zipcode_message',
@@ -33,6 +34,11 @@ class Dispatch extends Model
     public function agent(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function myAgents()
+    {
+        
     }
 
     public function textResponses(): HasMany

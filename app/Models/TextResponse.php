@@ -17,6 +17,10 @@ class TextResponse extends Model
         'dispatch_id',
     ];
 
+    protected $casts = [
+        'keywords' => 'array',
+    ];
+
     public function dispatch(): BelongsTo
     {
         return $this->belongsTo(Dispatch::class);

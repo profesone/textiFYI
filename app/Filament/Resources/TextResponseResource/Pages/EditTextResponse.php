@@ -10,6 +10,11 @@ class EditTextResponse extends EditRecord
 {
     protected static string $resource = TextResponseResource::class;
 
+    protected function getRedirectUrl(): string 
+    { 
+        return $this->getResource()::getUrl('index'); 
+    } 
+
     protected function getHeaderActions(): array
     {
         return [

@@ -3,15 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactResource\Pages;
-use App\Filament\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContactResource extends Resource
 {
@@ -40,9 +38,9 @@ class ContactResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('website'),
                 Forms\Components\TextInput::make('notes'),
-                Forms\Components\TextInput::make('text_response_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('text_response_id.title')
+                ->options(User::all()->pluck('name', 'id'))
+                    ->required(),
             ]);
     }
 
