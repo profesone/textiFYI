@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextifyiNumberResource\Pages;
 use App\Filament\Resources\TextifyiNumberResource\RelationManagers;
 use App\Models\TextifyiNumber;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,10 +25,10 @@ class TextifyiNumberResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('number')
                     ->required()
-                    ->tel(),
-                Forms\Components\Select::make('owner_id')
-                    ->label('Agent')
-                    ->options(User::where('team_id', Auth()->user()->team_id)->pluck('name', 'id')),
+                    ->numeric(),
+                Forms\Components\TextInput::make('team_id')
+                    ->numeric()
+                    ->default(null),
             ]);
     }
 
@@ -38,9 +37,10 @@ class TextifyiNumberResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('number')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('owner.name')
-                    ->label('Agent')
+                Tables\Columns\TextColumn::make('team_id')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -54,7 +54,9 @@ class TextifyiNumberResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

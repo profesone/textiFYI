@@ -2,19 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 
 class TextifyiNumber extends Model
 {
     protected $fillable = [
         'number',
-        'owner_id',
+        'title',
+        'team_id',
     ];
-
-    public function owner()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
 
     public function team()
     {

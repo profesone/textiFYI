@@ -3,13 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactResource\Pages;
+use App\Filament\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContactResource extends Resource
 {
@@ -21,26 +23,44 @@ class ContactResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('company_name'),
+                Forms\Components\TextInput::make('company_name')
+                    ->maxLength(255)
+                    ->default(null),
                 Forms\Components\TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('email')
-                    ->email(),
-                Forms\Components\TextInput::make('address'),
-                Forms\Components\TextInput::make('address_2'),
-                Forms\Components\TextInput::make('city'),
-                Forms\Components\TextInput::make('state'),
+                    ->email()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('address')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('address_2')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('city')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('state')
+                    ->maxLength(255)
+                    ->default(null),
                 Forms\Components\TextInput::make('zip')
-                    ->numeric(),
-                Forms\Components\TextInput::make('website'),
-                Forms\Components\TextInput::make('notes'),
-                Forms\Components\Select::make('text_response_id.title')
-                ->options(User::all()->pluck('name', 'id'))
-                    ->required(),
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('website')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('notes')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('text_response_id')
+                    ->numeric()
+                    ->default(null),
             ]);
     }
 
