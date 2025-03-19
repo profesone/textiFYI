@@ -21,8 +21,7 @@ return new class extends Migration
             $table->integer('zip')->nullable();
             $table->string('website')->nullable();
             $table->string('notes')->nullable();
-            $table->unsignedBigInteger('text_response_id')->required();
-            $table->foreign('text_response_id')->references('id')->on('text_responses')->onDelete('set null');
+            $table->unsignedBigInteger('text_response_id')->nullable();
             $table->timestamps();
         });
     }

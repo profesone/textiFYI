@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique()->required();
-            $table->integer('phone')->required();
+            $table->string('phone')->required();
             $table->foreignId('team_id')->nullable()->index();
             $table->enum('roles', ['admin', 'lead_agent', 'agent', 'client'])->default('client');
             $table->timestamp('email_verified_at')->nullable();
@@ -37,14 +37,6 @@ return new class extends Migration {
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
-        });
-
-        Schema::create('teams', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name');
-            $table->unsignedBigInteger('owner_id')->required()->unique();
-            $table->foreign('owner_id')->references('id')->on('users')->onDelete('set null');
-            $table->timestamps();
         });
     }
 
