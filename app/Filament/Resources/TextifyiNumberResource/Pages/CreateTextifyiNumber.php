@@ -9,9 +9,4 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTextifyiNumber extends CreateRecord
 {
     protected static string $resource = TextifyiNumberResource::class;
-
-    protected function getRedirectUrl(): string 
-    { 
-        return $this->getResource()::getUrl('index'); 
-    } 
 }
