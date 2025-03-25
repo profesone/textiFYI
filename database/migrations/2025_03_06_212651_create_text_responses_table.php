@@ -26,11 +26,6 @@ return new class extends Migration
             $table->foreign('dispatch_id')->references('id')->on('dispatches')->onDelete('cascade');
             $table->timestamps();
         });
-
-        Schema::table('contacts', function (Blueprint $table)
-        {            
-            $table->foreign('text_response_id')->references('id')->on('text_responses');
-        });
     }
 
     /**

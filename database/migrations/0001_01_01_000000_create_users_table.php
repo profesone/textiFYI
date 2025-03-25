@@ -15,7 +15,15 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique()->required();
             $table->string('phone')->required();
-            $table->foreignId('team_id')->nullable()->index();
+            $table->string('address')->nullable();
+            $table->string('address_2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('country')->nullable();
+            $table->string('description')->nullable();
+            $table->string('website')->nullable();
+            $table->unsignedBigInteger('team_id')->nullable();
             $table->enum('roles', ['admin', 'lead_agent', 'agent', 'client'])->default('client');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

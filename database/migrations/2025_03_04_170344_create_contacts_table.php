@@ -10,18 +10,11 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name')->nullable();
             $table->string('name')->required();
-            $table->integer('phone')->required();
+            $table->string('phone')->required();
             $table->string('email')->nullable();
-            $table->string('address')->nullable();
-            $table->string('address_2')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->integer('zip')->nullable();
-            $table->string('website')->nullable();
             $table->string('notes')->nullable();
-            $table->unsignedBigInteger('text_response_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

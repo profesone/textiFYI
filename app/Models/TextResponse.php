@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TextResponse extends Model
 {
@@ -19,15 +18,11 @@ class TextResponse extends Model
 
     protected $casts = [
         'keywords' => 'array',
+        'notification_numbers' => 'array',
     ];
 
     public function dispatch(): BelongsTo
     {
         return $this->belongsTo(Dispatch::class);
-    }
-
-    public function contacts(): HasMany
-    {
-        return $this->hasMany(Contact::class);
     }
 }
