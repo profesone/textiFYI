@@ -25,7 +25,6 @@ class TextifyiNumberResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('number')
-                ->regex('/^[0-9]{10}$/')
                     ->required(),
                 Forms\Components\Select::make('team_id.name')
                     ->label('Team')

@@ -15,6 +15,7 @@ return new class extends Migration
         {
             $table->id();
             $table->unsignedBigInteger('dispatch_id');
+            $table->string('title')->required();
             $table->longText('response')->nullable();
             $table->longText('notes')->nullable();
             $table->json('notification_numbers')->nullable();
