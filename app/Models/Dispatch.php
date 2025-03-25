@@ -28,21 +28,22 @@ class Dispatch extends Model
         'default_zip_notification',
         'email_address_module',
         'default_email_notification',
-        'agent_id',
+        'description',
+        'company_id',
     ];
-
-    public function agent(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function myAgents()
-    {
-        
-    }
 
     public function textResponses(): HasMany
     {
         return $this->hasMany(TextResponse::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function textifyiNumbers(): HasMany
+    {
+        return $this->hasMany(TextifyiNumber::class);
     }
 }

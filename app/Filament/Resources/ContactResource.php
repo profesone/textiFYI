@@ -2,14 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use App\Country;
+use App\State;
 use App\Filament\Resources\ContactResource\Pages;
+use App\Filament\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContactResource extends Resource
 {
@@ -21,26 +25,60 @@ class ContactResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('company_name'),
+                Forms\Components\Fieldset::make('Select or Create a Company')
+                ->schema([
+                    Forms\Components\Select::make('company_id')
+                    ->relationship(name: 'company', titleAttribute: 'name')
+                    ->createOptionForm([
+                        Forms\Components\Fieldset::make('Client')
+                    ->schema([
+                        Forms\Components\Select::make('client')
+                            ->relationship(name: 'client', titleAttribute: 'company_name')
+                            ->columnSpanFull(),
+                    ]),
                 Forms\Components\TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('address')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('address_2')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('city')
+                    ->maxLength(255)
+                    ->default(null),
+                    Forms\Components\Select::make('state')
+                    ->options(State::getStates())
+                    ->default(null),
+                Forms\Components\TextInput::make('zip')
+                    ->maxLength(5)
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\Select::make('country')
+                    ->options(Country::getCountries())
+                    ->default(null),
+                Forms\Components\TextInput::make('description')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('website')
+                    ->maxLength(255)
+                    ->default(null),
+                    ]),
+                ]),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('email')
-                    ->email(),
-                Forms\Components\TextInput::make('address'),
-                Forms\Components\TextInput::make('address_2'),
-                Forms\Components\TextInput::make('city'),
-                Forms\Components\TextInput::make('state'),
-                Forms\Components\TextInput::make('zip')
-                    ->numeric(),
-                Forms\Components\TextInput::make('website'),
-                Forms\Components\TextInput::make('notes'),
-                Forms\Components\Select::make('text_response_id.title')
-                ->options(User::all()->pluck('name', 'id'))
                     ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('notes')
+                    ->maxLength(255)
+                    ->default(null),
             ]);
     }
 
@@ -48,33 +86,16 @@ class ContactResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('company_name')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address_2')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('city')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('state')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('zip')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('website')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('notes')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('text_response_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -83,12 +104,12 @@ class ContactResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('company.name')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
                 //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

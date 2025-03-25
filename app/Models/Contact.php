@@ -4,26 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Contact extends Model
 {
     protected $fillable = [
-        'company_name',
         'name',
         'phone',
         'email',
-        'address',
-        'address_2',
-        'city',
-        'state',
-        'zip',
-        'website',
+        'company_id',
         'notes',
-        'text_response_id',
     ];
 
-    public function response(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(TextResponse::class);
-    }    
+        return $this->belongsTo(Company::class);
+    }
 }

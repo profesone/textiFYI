@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('textifyi_numbers', function (Blueprint $table) {
             $table->id();
-            $table->integer('number');
+            $table->string('number')->unique();
             $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
             $table->timestamps();

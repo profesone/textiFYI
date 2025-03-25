@@ -57,7 +57,7 @@ class TextResponseResource extends Resource
                 Forms\Components\Textarea::make('question'),
                 Forms\Components\Textarea::make('response'),
                 Forms\Components\Textarea::make('notes'),
-                Forms\Components\Textarea::make('notification_numbers'),
+                Forms\Components\TagsInput::make('notification_numbers'),
                 Forms\Components\TagsInput::make('keywords'),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('end_date'),
@@ -78,8 +78,7 @@ class TextResponseResource extends Resource
                 Tables\Columns\TextColumn::make('end_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -88,7 +87,11 @@ class TextResponseResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('dispatch.company.name')
+                    ->searchable()
+                    ->sortable(),
             ])
+            ->defaultGroup('dispatch.company.name')
             ->filters([
                 //
             ])

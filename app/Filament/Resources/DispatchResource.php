@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\State;
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
 use App\Models\Dispatch;
@@ -25,17 +26,49 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('textifyi_number')
-                    ->label('Textifyi Number/s')
-                    ->options(
-                        TextifyiNumber::where('team_id', Auth()->user()->team_id)->pluck('textifyi_number', 'id')
-                    ),
+                Forms\Components\Fieldset::make('Select or Create Company')
+                    ->schema([
+                        Forms\Components\Select::make('company_id')
+                            ->relationship(name: 'company', titleAttribute: 'name')
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->placeholder('Example: Lone Star: North Division')
+                                    ->maxLength(100),
+                                Forms\Components\TextInput::make('address')
+                                    ->maxLength(255)
+                                    ->default(null),
+                                Forms\Components\TextInput::make('address_2')
+                                    ->maxLength(50)
+                                    ->default(null),
+                                Forms\Components\TextInput::make('city')
+                                    ->default(null),
+                                Forms\Components\Select::make('state')
+                                    ->options(State::getStates())
+                                    ->default(null),
+                                Forms\Components\TextInput::make('zip')
+                                    ->maxLength(5)
+                                    ->numeric()
+                                    ->default(null),
+                                Forms\Components\TextInput::make('country')
+                                    ->maxLength(100)
+                                    ->default(null),
+                                Forms\Components\TextInput::make('description')
+                                    ->maxLength(255)
+                                    ->default(null),
+                                Forms\Components\TextInput::make('website')
+                                    ->url()
+                                    ->placeholder('Example: https://www.lonestartx.com')
+                                    ->default(null),
+                                Forms\Components\Select::make('client.company_name')
+                                    ->relationship(name: 'client', titleAttribute: 'company_name')
+                                    ->required()
+                            ])
+                            ->columnSpanFull(),
+                    ]),
                 Forms\Components\TextInput::make('title')
-                ->required()
-                ->placeholder('Example: Brun and Williams Account'),
-                Forms\Components\Select::make('agent_id')
-                    ->label('Agent')
-                    ->options(User::where('team_id', Auth()->user()->team_id)->pluck('name', 'id')),
+                    ->required()
+                    ->placeholder('Example: Seasonal Campaigns'),
                 Forms\Components\Textarea::make('default_message'),
                 Forms\Components\Textarea::make('default_request_message'),
                 Forms\Components\Textarea::make('default_zipcode_message'),
@@ -60,17 +93,12 @@ class DispatchResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('agent.name')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('agent')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -79,6 +107,7 @@ class DispatchResource extends Resource
             ->filters([
                 //
             ])
+            ->defaultGroup('company.name')
             ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

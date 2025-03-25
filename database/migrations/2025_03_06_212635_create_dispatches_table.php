@@ -12,11 +12,7 @@ return new class extends Migration {
     {
         Schema::create('dispatches', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('agent_id');
-            $table->string('title')
-                ->placeholder('ex. Company Name or Agent\'s Campaign Name')
-                ->required();
-            $table->json('textifyi_numbers')->required()->unique();
+            $table->string('title')->required();
             $table->longText('default_message')->nullable();
             $table->longText('default_request_message')->nullable();
             $table->longText('default_zipcode_message')->nullable();
@@ -34,7 +30,7 @@ return new class extends Migration {
             $table->boolean('default_zip_notification')->default(0)->nullable();
             $table->boolean('email_address_module')->default(0)->nullable();
             $table->boolean('default_email_notification')->default(0)->nullable();
-            $table->foreign('agent_id')->references('id')->on('users')->onDelete('cascade');
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }
