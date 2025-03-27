@@ -30,11 +30,11 @@ class TextResponseResource extends Resource
                 Forms\Components\Select::make('dispatch_id')
                     ->relationship(name: 'dispatch', titleAttribute: 'title')
                     ->createOptionForm([
-                        Forms\Components\Textarea::make('title')->required()
-                            ->placeholder('Example: ' . date('Y') . ' Apple Convention'),
-                        Forms\Components\Select::make('agent_id')
-                            ->label('Agent')
-                            ->options(User::where('team_id', Auth()->user()->team_id)->pluck('name', 'id')),
+                        Forms\Components\Select::make('company')
+                            ->relationship(name: 'company', titleAttribute: 'name'),
+                        Forms\Components\TextInput::make('title')
+                            ->required()
+                            ->placeholder('Example: Seasonal Campaigns'),
                         Forms\Components\Textarea::make('default_message'),
                         Forms\Components\Textarea::make('default_request_message'),
                         Forms\Components\Textarea::make('default_zipcode_message'),
@@ -96,9 +96,6 @@ class TextResponseResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([]),
