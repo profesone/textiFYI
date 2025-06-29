@@ -2,64 +2,19 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
-use Carbon\Carbon;
-use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TextifyiNumber extends Model
 {
-    use HasFactory, HasAdvancedFilter, SoftDeletes;
-
-    public $table = 'textifyi_numbers';
-
     protected $fillable = [
-        'textifyi_numbers',
-        'agency_id',
+        'number',
+        'title',
+        'team_id',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public $orderable = [
-        'textifyi_numbers',
-        'agency.name',
-        'created_at',
-    ];
-
-    public $filterable = [
-        'textifyi_numbers',
-        'agency.name',
-        'created_at',
-    ];
-
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
-    }
-
-    public function agency()
+    public function team()
     {
         return $this->belongsTo(Team::class);
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function getDeletedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
     }
 }

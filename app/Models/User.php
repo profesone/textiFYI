@@ -2,129 +2,64 @@
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
-use App\Traits\HasTeam;
-use Carbon\Carbon;
-use DateTimeInterface;
-use Hash;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Translation\HasLocalePreference;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
+class User extends Authenticatable
 {
-    use HasFactory, HasAdvancedFilter, Notifiable, HasTeam, SoftDeletes;
-
-    public $table = 'users';
-
-    protected $casts = [
-        'is_approved' => 'boolean',
-    ];
-
-    protected $hidden = [
-        'remember_token',
-        'password',
-    ];
-
-    protected $dates = [
-        'email_verified_at',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'address',
+        'address_2',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'description',
+        'website',
         'password',
-        'locale',
         'team_id',
-        'is_approved',
+        'roles',
     ];
 
-    public $orderable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'locale',
-        'team.name',
-        'is_approved',
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'roles.title',
-        'locale',
-        'team.name',
-    ];
-
-    public function getIsAdminAttribute()
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        return $this->roles()->where('title', 'Admin')->exists();
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
-    public function scopeAdmins()
-    {
-        return $this->whereHas('roles', fn ($q) => $q->where('title', 'Admin'));
-    }
-
-    public function preferredLocale()
-    {
-        return $this->locale;
-    }
-
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
-    }
-
-    public function getEmailVerifiedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function setEmailVerifiedAtAttribute($value)
-    {
-        $this->attributes['email_verified_at'] = $value ? Carbon::createFromFormat(config('project.datetime_format'), $value)->format('Y-m-d H:i:s') : null;
-    }
-
-    public function setPasswordAttribute($input)
-    {
-        if ($input) {
-            $this->attributes['password'] = Hash::needsRehash($input) ? Hash::make($input) : $input;
-        }
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function getDeletedAtAttribute($value)
-    {
-        return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('project.datetime_format')) : null;
-    }
-
-    public function team()
+    public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles === 'admin';
+    }
+
+    public function isLeadAgent(): bool
+    {
+        return $this->roles === 'lead_agent';
     }
 }
