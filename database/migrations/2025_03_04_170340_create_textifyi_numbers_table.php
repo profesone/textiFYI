@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('textifyi_numbers', function (Blueprint $table) {
             $table->id();
             $table->string('number')->unique();
-            $table->unsignedBigInteger('team_id')->nullable();
-            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
+            $table->boolean('used')->default(false);
+            $table->foreignId('dispatch_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -16,4 +16,11 @@ class ListTextifyiNumbers extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TextifyiNumberResource\Widgets\TextifyiNumberOverview::class,
+        ];
+    }
 }

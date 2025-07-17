@@ -2,19 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'name',
+        'company_name',
         'email',
         'phone',
         'address',
@@ -25,16 +35,35 @@ class User extends Authenticatable
         'country',
         'description',
         'website',
-        'password',
-        'team_id',
         'roles',
+        'email_verified_at',
+        'password',
+        'active',
+        'agency_id',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('agency_id', function (Builder $query) {
+            
+            // if(is_null(auth()->user()->roles) !== null) {
+            //     if(auth()->user()->roles != 'admin') {
+            //         $query->where('agency_id', '=', auth()->user()->agency_id);
+            //     }
+            // }
+        });
+    }
+    
     /**
      * Get the attributes that should be cast.
      *
@@ -48,18 +77,20 @@ class User extends Authenticatable
         ];
     }
 
-    public function team(): BelongsTo
+    /**
+     * Get the user's initials
+     */
+    public function initials(): string
     {
-        return $this->belongsTo(Team::class);
+        return Str::of($this->name)
+            ->explode(' ')
+            ->take(2)
+            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->implode('');
     }
 
-    public function isAdmin(): bool
+    public function isBlocked(): bool
     {
-        return $this->roles === 'admin';
-    }
-
-    public function isLeadAgent(): bool
-    {
-        return $this->roles === 'lead_agent';
+        return $this->roles != 'admin';
     }
 }

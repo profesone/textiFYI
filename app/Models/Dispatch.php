@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Observers\DispatchObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(DispatchObserver::class)]
 class Dispatch extends Model
 {
     protected $fillable = [
@@ -29,7 +32,8 @@ class Dispatch extends Model
         'email_address_module',
         'default_email_notification',
         'description',
-        'company_id',
+        'client_id',
+        'active',
     ];
 
     public function textResponses(): HasMany
@@ -37,13 +41,18 @@ class Dispatch extends Model
         return $this->hasMany(TextResponse::class);
     }
 
-    public function company(): BelongsTo
+    public function client(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function textifyiNumbers(): HasMany
     {
         return $this->hasMany(TextifyiNumber::class);
+    }
+
+    public function agency()
+    {
+        return $this->client->agency;
     }
 }

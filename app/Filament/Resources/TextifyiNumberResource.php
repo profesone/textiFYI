@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextifyiNumberResource\Pages;
 use App\Filament\Resources\TextifyiNumberResource\RelationManagers;
 use App\Models\TextifyiNumber;
-use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,9 +25,10 @@ class TextifyiNumberResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('number')
                     ->required(),
-                Forms\Components\Select::make('team_id.name')
-                    ->label('Team')
-                    ->options(Team::all()->pluck('name', 'id'))
+                Forms\Components\Select::make('dispatch_id')
+                    ->relationship('dispatch', 'title'),
+                Forms\Components\Select::make('client_id')
+                    ->relationship('client', 'id'),
             ]);
     }
 
@@ -37,9 +37,12 @@ class TextifyiNumberResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('number')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('dispatch.title')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team_id.name')
-                    ->label('Team')
+                Tables\Columns\TextColumn::make('client.id')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -53,7 +56,9 @@ class TextifyiNumberResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

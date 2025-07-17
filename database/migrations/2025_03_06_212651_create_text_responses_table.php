@@ -22,7 +22,7 @@ return new class extends Migration
             $table->json('keywords')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->boolean('active')->default(0)->nullable();
+            $table->boolean('active')->default(false);
             $table->foreign('dispatch_id')->references('id')->on('dispatches')->onDelete('cascade');
             $table->timestamps();
         });

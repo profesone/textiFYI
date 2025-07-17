@@ -16,4 +16,11 @@ class ListDispatches extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            DispatchResource\Widgets\DispatchOverview::class,
+        ];
+    }
 }

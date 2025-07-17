@@ -2,12 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\State;
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
 use App\Models\Dispatch;
-use App\Models\User;
-use App\Models\TextifyiNumber;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,53 +23,16 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Fieldset::make('Select or Create Company')
-                    ->schema([
-                        Forms\Components\Select::make('company_id')
-                            ->relationship(name: 'company', titleAttribute: 'name')
-                            ->createOptionForm([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->placeholder('Example: Lone Star: North Division')
-                                    ->maxLength(100),
-                                Forms\Components\TextInput::make('address')
-                                    ->maxLength(255)
-                                    ->default(null),
-                                Forms\Components\TextInput::make('address_2')
-                                    ->maxLength(50)
-                                    ->default(null),
-                                Forms\Components\TextInput::make('city')
-                                    ->default(null),
-                                Forms\Components\Select::make('state')
-                                    ->options(State::getStates())
-                                    ->default(null),
-                                Forms\Components\TextInput::make('zip')
-                                    ->maxLength(5)
-                                    ->numeric()
-                                    ->default(null),
-                                Forms\Components\TextInput::make('country')
-                                    ->maxLength(100)
-                                    ->default(null),
-                                Forms\Components\TextInput::make('description')
-                                    ->maxLength(255)
-                                    ->default(null),
-                                Forms\Components\TextInput::make('website')
-                                    ->url()
-                                    ->placeholder('Example: https://www.lonestartx.com')
-                                    ->default(null),
-                                Forms\Components\Select::make('client.company_name')
-                                    ->relationship(name: 'client', titleAttribute: 'company_name')
-                                    ->required()
-                            ])
-                            ->columnSpanFull(),
-                    ]),
                 Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->placeholder('Example: Seasonal Campaigns'),
-                Forms\Components\Textarea::make('default_message'),
-                Forms\Components\Textarea::make('default_request_message'),
-                Forms\Components\Textarea::make('default_zipcode_message'),
-                Forms\Components\Textarea::make('email_address_response'),
+                    ->required(),
+                Forms\Components\Textarea::make('default_message')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('default_request_message')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('default_zipcode_message')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('email_address_response')
+                    ->columnSpanFull(),
                 Forms\Components\Toggle::make('default_messages_module'),
                 Forms\Components\Toggle::make('default_message_notification'),
                 Forms\Components\Toggle::make('default_message_response'),
@@ -86,6 +46,11 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('default_zip_notification'),
                 Forms\Components\Toggle::make('email_address_module'),
                 Forms\Components\Toggle::make('default_email_notification'),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('client_id')
+                    ->relationship('client', 'id')
+                    ->required(),
             ]);
     }
 
@@ -93,12 +58,45 @@ class DispatchResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('agent')
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('default_messages_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('default_message_notification')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('default_message_response')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('publish_keywords_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('leads_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('keyword_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('mls_listing_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('mls_agent_notification')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('tips_request_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('zip_code_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('default_zip_notification')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('email_address_module')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('default_email_notification')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('client.id')
+                    ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -107,8 +105,9 @@ class DispatchResource extends Resource
             ->filters([
                 //
             ])
-            ->defaultGroup('company.name')
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

@@ -16,4 +16,11 @@ class ListTextResponses extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TextResponseResource\Widgets\TextResponseOverview::class,
+        ];
+    }
 }

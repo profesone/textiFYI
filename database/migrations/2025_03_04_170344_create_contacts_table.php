@@ -14,6 +14,9 @@ return new class extends Migration
             $table->string('phone')->required();
             $table->string('email')->nullable();
             $table->string('notes')->nullable();
+            $table->foreignId('client_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
