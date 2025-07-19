@@ -43,30 +43,26 @@ class BrunPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('img/TextiFYI_web_sm.png'))
             ->navigationItems([
-                NavigationItem::make('Main App')
+                NavigationItem::make('Agent Portal')
                     ->url('/')
                     ->icon('heroicon-o-beaker')
                     ->sort(1),
-                NavigationItem::make('Clients')
-                    ->url('/brun/clients')
-                    ->icon('heroicon-o-user-plus')
-                    ->sort(2),
                 NavigationItem::make('Dispatches')
                     ->url('/brun/dispatches')
-                    ->icon('heroicon-o-cog-6-tooth')
-                    ->sort(3),
+                    ->icon('heroicon-o-arrows-pointing-out')
+                    ->sort(2),
                 NavigationItem::make('Textifyi Numbers')
                     ->url('/brun/textifyi-numbers')
-                    ->icon('heroicon-o-hashtag')
-                    ->sort(4),
+                    ->icon('heroicon-o-phone-arrow-down-left')
+                    ->sort(3),
                 NavigationItem::make('Text Responses')
                     ->url('/brun/text-responses')
-                    ->icon('heroicon-o-phone-arrow-down-left')
-                    ->sort(5),
+                    ->icon('heroicon-o-chat-bubble-oval-left-ellipsis')
+                    ->sort(4),
                 NavigationItem::make('Users')
                     ->url('/brun/users')
                     ->icon('heroicon-o-user-group')
-                    ->sort(6),
+                    ->sort(5),
             ])     
             ->middleware([
                 EncryptCookies::class,

@@ -16,11 +16,15 @@ class StatsOverview extends BaseWidget
     {
         if (auth()->user()->roles == 'admin') {
             $dashboardStats = [
-                Stat::make('Active Users', fn () => User::where('active', true)->count()),
+                Stat::make('Agents', fn () => User::where('active', true)
+                    ->where('roles', 'agent')
+                    ->count()),
+                Stat::make('Clients', fn () => User::where('active', true)
+                    ->where('roles', 'client')
+                    ->count()),
                 Stat::make('Active Dispatches', fn () => Dispatch::where('active', true)->count()),
                 Stat::make('Active Text Responses', fn () => TextResponse::where('active', true)->count()),
-                Stat::make('Active TextiFYI Numbers', fn () => TextifyiNumber::where('used', true)->count()),
-                Stat::make('Available TextiFYI Numbers', fn () => TextifyiNumber::where('used', false)->count()),
+                Stat::make('TextiFYI Numbers', fn () => TextifyiNumber::count()),
                 Stat::make('Total Clients', fn () => Client::count()),
             ];
         }
@@ -42,5 +46,7 @@ class StatsOverview extends BaseWidget
                 Stat::make('Total Clients', fn () => Client::where('agency_id', auth()->user()->agency_id)->count()),
             ];
         }
+
+        return $dashboardStats;
     }
 }

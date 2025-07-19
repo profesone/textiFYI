@@ -16,17 +16,16 @@ class UserOverview extends ChartWidget
 
     private function getMonthlyTotals(): array
     {
-        $data = User::selectRaw('COUNT(*) as count, YEAR(created_at) year, MONTH(created_at) month')
+        $data = User::selectRaw('COUNT(*) as count, MONTH(created_at) month')
         ->where('created_at', '>=', Carbon::now()->subMonths(12)->startOfMonth())
-        ->groupBy('year', 'month')
-        ->orderBy('year', 'asc')
+        ->groupBy('month')
         ->orderBy('month', 'asc')
         ->get();
 
         $monthCount = [];
 
         foreach ($data as $item) {
-            $monthCount[$item->month] = $item->count;
+            $monthCount[date("M", mktime(0, 0, 0, $item->month, 1))] = $item->count;
         }
 
         return $monthCount;

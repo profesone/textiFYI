@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
 use App\Models\Dispatch;
+use App\Models\Client;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,7 +24,13 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('client.user.name')
+                    ->options(Client::all()->pluck('name', 'id'))
+                    ->label('Client')
+                    ->columnSpanFull()
+                    ->required(),
                 Forms\Components\TextInput::make('title')
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),
@@ -47,10 +54,7 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('email_address_module'),
                 Forms\Components\Toggle::make('default_email_notification'),
                 Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('client_id')
-                    ->relationship('client', 'id')
-                    ->required(),
+                    ->columnSpanFull(),                
             ]);
     }
 

@@ -27,6 +27,11 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('client.user.name')
+                    ->options(Client::where('agency_id', auth()->user()->agency_id)->pluck('name', 'id'))
+                    ->label('Client')
+                    ->columnSpanFull()
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
@@ -53,9 +58,6 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('default_email_notification'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('client_id')
-                    ->relationship('client', 'id')
-                    ->required(),
                 Forms\Components\Toggle::make('active')
                     ->required(),
             ]);

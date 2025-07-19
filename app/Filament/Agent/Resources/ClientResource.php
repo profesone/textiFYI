@@ -30,6 +30,7 @@ class ClientResource extends Resource
                 Forms\Components\Select::make('roles')
                     ->default('client')
                     ->label('Role')
+                    ->required()
                     ->options([
                         'client' => 'Client',
                         'agent' => 'Agent',
@@ -86,15 +87,13 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('agency_id.name')
+                Forms\Components\TextInput::make('agency_id')
                     ->numeric()                    
                     ->default(auth()->user()->agency_id)
-                    ->hidden(),
+                    ->visible(false),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
-                    ->required()
-                    ->hiddenOn('edit')
+                    ->revealable()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('active')
                     ->default(true),

@@ -93,4 +93,11 @@ class User extends Authenticatable
     {
         return $this->roles != 'admin';
     }
+
+    public function agency()
+    {
+        if(auth()->user()->agency_id !== null) {
+            return $this->belongsTo(Agency::class);
+        }
+    }
 }
