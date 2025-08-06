@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
 use App\Models\Dispatch;
-use App\Models\Client;
+use App\Models\TextifyiNumber;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,14 +27,18 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('client.user.name')
-                    ->options(Client::all()->pluck('name', 'id'))
+                Forms\Components\Select::make('client_id')
                     ->label('Client')
-                    ->columnSpanFull()
-                    ->required(),
+                    ->options(User::where('roles', 'client')
+                        ->pluck('name', 'id'))
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('title')
-                    ->columnSpanFull()
                     ->required(),
+                Forms\Components\Select::make('textifyi_numbers')
+                    ->multiple()
+                    ->options(TextifyiNumber::where('used', '=', false)->pluck('number','id'))
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_request_message')
@@ -54,7 +61,8 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('email_address_module'),
                 Forms\Components\Toggle::make('default_email_notification'),
                 Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),                
+                    ->columnSpanFull(),
+                Forms\Components\Toggle::make('active'),
             ]);
     }
 
@@ -63,36 +71,10 @@ class DispatchResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('default_messages_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('default_message_notification')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('default_message_response')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('publish_keywords_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('leads_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('keyword_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('mls_listing_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('mls_agent_notification')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('tips_request_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('zip_code_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('default_zip_notification')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('email_address_module')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('default_email_notification')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('client.id')
-                    ->numeric()
+                    ->searchable(),                
+                Tables\Columns\TextColumn::make('client.user.name')
                     ->sortable(),
+                Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -107,8 +89,11 @@ class DispatchResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Filter::make('is_featured')
+                    ->query(fn (Builder $query): Builder => $query->where('active', false))
+                    ->toggle()
+                    ->label('Needs Approval')
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

@@ -37,9 +37,6 @@ class AgencyResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('owner_id')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -76,11 +73,9 @@ class AgencyResource extends Resource
             ->filters([
                 Filter::make('id')
                     ->query(function (Builder $query, array $data): void {
-                        $query->where('id', auth()->user()->agency_id);
+                        $query->where('id', auth()->user()->agency_id)
+                            ->where('roles', '!=', 'client');
                     }),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -100,7 +95,6 @@ class AgencyResource extends Resource
     {
         return [
             'index' => Pages\ListAgencies::route('/'),
-            'create' => Pages\CreateAgency::route('/create'),
             'edit' => Pages\EditAgency::route('/{record}/edit'),
         ];
     }

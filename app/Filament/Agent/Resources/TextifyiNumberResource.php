@@ -30,18 +30,16 @@ class TextifyiNumberResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Toggle::make('used')
                     ->required(),
-                Forms\Components\Select::make('dispatch_id')
-                    ->relationship('dispatch', 'title')
-                    ->default(null),
-                Forms\Components\Select::make('client_id')
-                    ->relationship('client', 'id')
-                    ->default(null),
+                Forms\Components\Select::make('dispatch.title'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->where('agency_id', auth()->user()->agency_id);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->numeric()
@@ -50,12 +48,7 @@ class TextifyiNumberResource extends Resource
                 Tables\Columns\IconColumn::make('used')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('dispatch.title')
-                    ->numeric()
                     ->label('Dispatch')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('client.id')
-                    ->numeric()
-                    ->label('Client')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -69,9 +62,7 @@ class TextifyiNumberResource extends Resource
             ->filters([
                 //
             ],)
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
+            ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

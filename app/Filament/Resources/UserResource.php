@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use App\Models\Agency;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Tables\Filters\Filter;
@@ -26,149 +25,99 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('roles')
-                    ->default('client')
-                    ->label('Role')
-                    ->required()
-                    ->options([
-                        'client' => 'Client',
-                        'agent' => 'Agent',
-                        'agent_lead' => 'Agent Lead',
-                        'admin' => 'Admin',
-                    ])
-                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\TextInput::make('company_name')
-                    ->label('Company')
-                    ->maxLength(255),
+                    ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->label('Email')
-                    ->required()
-                    ->maxLength(255),
+                    ->required(),
                 Forms\Components\TextInput::make('phone')
-                    ->label('Phone')
-                    ->required()
-                    ->maxLength(20),
+                    ->tel()
+                    ->required(),
                 Forms\Components\TextInput::make('address')
-                    ->label('Address')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('address_2')
-                    ->label('Address 2')
-                    ->maxLength(255)
-                    ->default(null),
+                    ->required(),
+                Forms\Components\TextInput::make('address_2'),
                 Forms\Components\TextInput::make('city')
-                    ->label('City')
-                    ->required()
-                    ->maxLength(255),
+                    ->required(),
                 Forms\Components\TextInput::make('state')
-                    ->label('State')
-                    ->required()
-                    ->maxLength(255),
+                    ->required(),
                 Forms\Components\TextInput::make('zip')
-                    ->label('Zip')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('country')
-                    ->label('Country')
-                    ->options([
-                        'US' => 'United States',
-                        'CA' => 'Canada',
-                        'MX' => 'Mexico',
-                    ])
-                    ->default('US'),
-                Forms\Components\TextInput::make('description')
-                    ->label('Description')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('website')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\Select::make('agency.name')
-                    ->label('Agency')
-                    ->options(Agency::all()->pluck('name', 'id'))
+                    ->required(),
+                Forms\Components\TextInput::make('country'),
+                Forms\Components\TextInput::make('description'),
+                Forms\Components\TextInput::make('website'),
+                Forms\Components\TextInput::make('team_id')
+                    ->numeric(),
+                Forms\Components\TextInput::make('roles')
                     ->required(),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->revealable()
-                    ->maxLength(255),
+                    ->required(),
                 Forms\Components\Toggle::make('active')
-                    ->default(true),
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('name')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('company_name')
-                ->label('Company')
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('email')
-                ->label('Email')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('phone')
-                ->label('Phone')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('city')
-                ->label('City')
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('state')
-                ->label('State')
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('country')
-                ->label('Country')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('description')
-                ->label('Description')
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('website')
-                ->label('Website')
-                ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\ToggleColumn::make('active'),
-            Tables\Columns\TextColumn::make('created_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('updated_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('roles')
-                ->label('Role')
-                ->searchable(),
-        ])
-        ->defaultGroup('agency.name')
-        ->filters([
-            Filter::make('agent_lead')
-                ->query(function (Builder $query) {
-                    $query->where('roles', 'agent_lead');
-                }),
-            Filter::make('agents')
-                ->query(function (Builder $query) {
-                    $query->where('roles', 'agent');
-                }),
-            Filter::make('clients')
-                ->query(function (Builder $query) {
-                    $query->where('roles', 'client');
-                }),
-            ], FiltersLayout::AboveContent)
-        ->actions([])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->description(fn (User $record): string => substr($record->company_name, 0, 40) . "..."),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('address')
+                    ->searchable()
+                    ->description(fn (User $record): string => $record->city.', '.$record->state.', '.$record->country),
+                Tables\Columns\TextColumn::make('agency.name')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('roles')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('active')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //// Filter by agents and by clients
+                Filter::make('agents')
+                    ->query(function (Builder $query) {
+                        $query->where('roles', 'agent');
+                    }),
+                Filter::make('clients')
+                    ->query(function (Builder $query) {
+                        $query->where('roles', 'client');
+                    }),
+                Filter::make('Admins')
+                    ->query(function (Builder $query) {
+                        $query->where('roles', 'admin');
+                    }),
+                Filter::make('Billable Client')
+                    ->query(function (Builder $query) {
+                        $query->where('roles', 'lead_agent');
+                    }),
+                ], FiltersLayout::AboveContent)
+            ->defaultGroup('roles')
+            ->actions([])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array

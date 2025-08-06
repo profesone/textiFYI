@@ -31,6 +31,7 @@ return new class extends Migration {
             $table->boolean('email_address_module')->default(0)->nullable();
             $table->boolean('default_email_notification')->default(0)->nullable();
             $table->longText('description')->nullable();
+            $table->json('textifyi_numbers')->nullable();
             $table->foreignId('client_id')
                 ->constrained()
                 ->cascadeOnDelete();

@@ -5,6 +5,8 @@ namespace App\Filament\Agent\Resources;
 use App\Filament\Agent\Resources\DispatchResource\Pages;
 use App\Filament\Agent\Resources\DispatchResource\RelationManagers;
 use App\Models\Dispatch;
+use App\Models\TextifyiNumber;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,13 +29,28 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('client.user.name')
-                    ->options(Client::where('agency_id', auth()->user()->agency_id)->pluck('name', 'id'))
+                Forms\Components\Select::make('client_id')
                     ->label('Client')
-                    ->columnSpanFull()
-                    ->required(),
+                    ->options(User::where('roles', 'client')
+                        ->where('agency_id', '=', auth()->user()->agency_id)
+                        ->pluck('name', 'id'))
+                    ->required()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('client_id')
+                    ->label('Client')
+                    ->options(User::where('roles', 'client')
+                        ->where('agency_id', '=', auth()->user()->agency_id)
+                        ->pluck('name', 'id'))
+                    ->required()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('textifyi_numbers')
+                    ->multiple()
+                    ->options(TextifyiNumber::where('agency_id', auth()->user()->agency_id)
+                        ->where('used', '=', false)->pluck('number','id'))
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('title')
                     ->required()
+                    ->columnSpanFull()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),
@@ -58,8 +75,6 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('default_email_notification'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\Toggle::make('active')
-                    ->required(),
             ]);
     }
 
@@ -76,20 +91,37 @@ class DispatchResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('client.user.name')
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('default_messages_module'),
-                Tables\Columns\ToggleColumn::make('default_message_notification'),
-                Tables\Columns\ToggleColumn::make('default_message_response'),
-                Tables\Columns\ToggleColumn::make('publish_keywords_module'),
-                Tables\Columns\ToggleColumn::make('leads_module'),
-                Tables\Columns\ToggleColumn::make('keyword_module'),
-                Tables\Columns\ToggleColumn::make('mls_listing_module'),
-                Tables\Columns\ToggleColumn::make('mls_agent_notification'),
-                Tables\Columns\ToggleColumn::make('tips_request_module'),
-                Tables\Columns\ToggleColumn::make('zip_code_module'),
-                Tables\Columns\ToggleColumn::make('default_zip_notification'),
-                Tables\Columns\ToggleColumn::make('email_address_module'),
-                Tables\Columns\ToggleColumn::make('default_email_notification'),
-                Tables\Columns\ToggleColumn::make('active'),
+                Tables\Columns\ToggleColumn::make('default_messages_module')
+                    ->label('Default Message'),
+                Tables\Columns\ToggleColumn::make('default_message_notification')
+                    ->label('Default Message Notification'),
+                Tables\Columns\ToggleColumn::make('default_message_response')
+                    ->label('Default Message Response'),
+                Tables\Columns\ToggleColumn::make('publish_keywords_module')
+                    ->label('Publish Keywords'),
+                Tables\Columns\ToggleColumn::make('leads_module')
+                    ->label('Leads'),
+                Tables\Columns\ToggleColumn::make('keyword_module')
+                    ->label('Keywords'),
+                Tables\Columns\ToggleColumn::make('mls_listing_module')
+                    ->label('MLS Listing'),
+                Tables\Columns\ToggleColumn::make('mls_agent_notification')
+                    ->label('MLS Agent Notification'),
+                Tables\Columns\ToggleColumn::make('tips_request_module')
+                    ->label('Tips Request'),
+                Tables\Columns\ToggleColumn::make('zip_code_module')
+                    ->label('Zip Code'),
+                Tables\Columns\ToggleColumn::make('default_zip_notification')
+                    ->label('Default Zip Notification'),
+                Tables\Columns\ToggleColumn::make('email_address_module')
+                    ->label('Email Address'),
+                Tables\Columns\ToggleColumn::make('default_email_notification')
+                    ->label('Default Email Notification'),
+                Tables\Columns\BooleanColumn::make('active')
+                    ->icon(fn (string $state): string => match ($state) {
+                            '0' => 'heroicon-o-clock',
+                            '1' => 'heroicon-o-check-circle',
+                        }),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

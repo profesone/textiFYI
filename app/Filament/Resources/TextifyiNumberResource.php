@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextifyiNumberResource\Pages;
 use App\Filament\Resources\TextifyiNumberResource\RelationManagers;
 use App\Models\TextifyiNumber;
+use App\Models\Agency;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,12 +24,14 @@ class TextifyiNumberResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('agency_id')
+                    ->label('Agency')
+                    ->options(Agency::pluck('name', 'id'))
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('number')
                     ->required(),
                 Forms\Components\Select::make('dispatch_id')
                     ->relationship('dispatch', 'title'),
-                Forms\Components\Select::make('client_id')
-                    ->relationship('client', 'id'),
             ]);
     }
 
@@ -38,16 +41,14 @@ class TextifyiNumberResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('dispatch.title')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('client.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('agency.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('dispatch.title')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -57,7 +58,7 @@ class TextifyiNumberResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

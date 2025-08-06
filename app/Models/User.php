@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -94,10 +95,8 @@ class User extends Authenticatable
         return $this->roles != 'admin';
     }
 
-    public function agency()
+    public function agency(): BelongsTo
     {
-        if(auth()->user()->agency_id !== null) {
-            return $this->belongsTo(Agency::class);
-        }
+        return $this->belongsTo(Agency::class, 'agency_id', 'id');
     }
 }

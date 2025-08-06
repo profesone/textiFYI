@@ -60,7 +60,8 @@ class TextResponseResource extends Resource
                         Forms\Components\Toggle::make('default_zip_notification'),
                         Forms\Components\Toggle::make('email_address_module'),
                         Forms\Components\Toggle::make('default_email_notification'),                                            
-                    ]),
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\Textarea::make('response')

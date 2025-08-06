@@ -14,19 +14,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Profesone',
-            'company_name' => '',
-            'email' => 'profesone@gmail.com',
-            'phone' => '2813231333',
-            'roles' => 'admin',
-            'address' => '123 Street',
-            'city' => 'Brooklyn',
-            'state' => 'NY',
-            'zip' => '12122',
-            'password' => bcrypt('password')
-        ]);
-        
-        User::factory()->create([
             'name' => 'A Team Leader',
             'company_name' => 'A Team',
             'email' => 'ateam@test.com',
@@ -52,6 +39,19 @@ class UserSeeder extends Seeder
             'zip' => '12122',
             'agency_id' => 2,
             'password' => bcrypt('password')
+        ]);
+
+        User::factory()->create([
+            'name' => 'Profesone',
+            'company_name' => '',
+            'email' => 'admin@TextiFYI.com',
+            'phone' => '2813231333',
+            'roles' => 'admin',
+            'address' => '123 Street',
+            'city' => 'Brooklyn',
+            'state' => 'NY',
+            'zip' => '12122',
+            'password' => bcrypt('M3t@1V$$t331')
         ]);
 
         User::factory(10)->create();

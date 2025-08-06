@@ -15,18 +15,17 @@ class TextifyiNumber extends Model
     protected $fillable = [
         'number',
         'title',
-        'client_id',
         'dispatch_id',
-        'used',
+        'agency_id',
     ];
 
     public function dispatch(): BelongsTo
     {
-        return $this->belongsTo(Dispatch::class);
+        return $this->belongsTo(Dispatch::class, 'dispatch_id', 'id');
     }
 
-    public function client(): BelongsTo
+    public function agency(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Agency::class, 'agency_id', 'id');
     }
 }

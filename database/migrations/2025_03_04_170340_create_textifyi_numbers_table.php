@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('number')->unique();
             $table->boolean('used')->default(false);
             $table->foreignId('dispatch_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('client_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('agency_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

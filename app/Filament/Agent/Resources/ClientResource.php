@@ -30,7 +30,6 @@ class ClientResource extends Resource
                 Forms\Components\Select::make('roles')
                     ->default('client')
                     ->label('Role')
-                    ->required()
                     ->options([
                         'client' => 'Client',
                         'agent' => 'Agent',
@@ -77,7 +76,6 @@ class ClientResource extends Resource
                     ->options([
                         'US' => 'United States',
                         'CA' => 'Canada',
-                        'MX' => 'Mexico',
                     ])
                     ->default('US'),
                 Forms\Components\TextInput::make('description')
@@ -87,13 +85,15 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('agency_id')
+                Forms\Components\TextInput::make('agency_id.name')
                     ->numeric()                    
                     ->default(auth()->user()->agency_id)
-                    ->visible(false),
+                    ->hidden(),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->revealable()
+                    ->required()
+                    ->required()
+                    ->hiddenOn('edit')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('active')
                     ->default(true),
@@ -112,6 +112,7 @@ class ClientResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company_name')
                     ->label('Company')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
@@ -129,6 +130,7 @@ class ClientResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('country')
                     ->label('Country')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Description')
@@ -163,6 +165,7 @@ class ClientResource extends Resource
                         $query->where('roles', 'client');
                     }),
                 ], FiltersLayout::AboveContent)
+            ->defaultGroup('roles')
             ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

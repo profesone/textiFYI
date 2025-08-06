@@ -5,9 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextResponseResource\Pages;
 use App\Filament\Resources\TextResponseResource\RelationManagers;
 use App\Models\TextResponse;
+use App\Models\Client;
 use Filament\Forms;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,18 +25,10 @@ class TextResponseResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('dispatch_id')
-                    ->relationship('dispatch', 'title')
+                    ->relationship(name: 'dispatch', titleAttribute: 'title')
                     ->createOptionForm([
                         Forms\Components\TextInput::make('title')
                             ->required(),
-                        Forms\Components\Select::make('client_id')
-                            ->label('Client')
-                            ->options(Client::all()
-                                ->where('agency_id', '=', auth()->user()->agency_id)
-                                ->pluck('user.name', 'id'))
-                            ->required(),
-                        Forms\Components\Textarea::make('description')
-                            ->columnSpanFull(),   
                         Forms\Components\Textarea::make('default_message')
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('default_request_message')
@@ -58,20 +49,33 @@ class TextResponseResource extends Resource
                         Forms\Components\Toggle::make('zip_code_module'),
                         Forms\Components\Toggle::make('default_zip_notification'),
                         Forms\Components\Toggle::make('email_address_module'),
-                        Forms\Components\Toggle::make('default_email_notification'),                                            
+                        Forms\Components\Toggle::make('default_email_notification'),
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('client_id')
+                            ->label('Client')
+                            ->options(Client::with('user')
+                                ->where('agency_id', '=', auth()->user()->agency_id)
+                                ->get()
+                                ->pluck('user.name', 'id'))
+                            ->required(),
                     ]),
                 Forms\Components\TextInput::make('title')
+                    ->label('Title')
                     ->required(),
                 Forms\Components\Textarea::make('response')
+                    ->label('Response')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('notes')
+                    ->label('Notes')
                     ->columnSpanFull(),
-                Forms\Components\TagsInput::make('notification_numbers'),
-                Forms\Components\TagsInput::make('keywords'),
+                Forms\Components\Textarea::make('notification_numbers')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('keywords')
+                    ->columnSpanFull(),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('end_date'),
-                Forms\Components\Toggle::make('active')
-                    ->required(),
+                Forms\Components\Toggle::make('active'),
             ]);
     }
 
@@ -79,27 +83,19 @@ class TextResponseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('dispatch.client.user.name')
-                    ->searchable()
-                    ->label('Client')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('dispatch.title')
-                    ->searchable()
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('keywords')
-                    ->badge(),
-                Tables\Columns\TextColumn::make('notification_numbers')
-                    ->badge(),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('active'),
-                Tables\Columns\TextColumn::make('notes')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('active')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -110,22 +106,11 @@ class TextResponseResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('dispatch.client.user.name')
-                    ->relationship(
-                        'dispatch.client.user',
-                        'name',
-                        fn (Builder $query) => $query
-                            ->where('agency_id', auth()->user()->agency_id)
-                            ->where('roles', 'client')
-                    )
-                    ->label('Clients')
-                    ->searchable()
-                    ->preload(),
-            ], layout: FiltersLayout::AboveContent)
+                //
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultGroup('dispatch.client.user.name')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
