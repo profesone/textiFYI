@@ -2,7 +2,6 @@
 
 namespace App\Filament\Agent\Widgets;
 
-use App\Models\Client;
 use App\Models\Dispatch;
 use App\Models\TextResponse;
 use App\Models\TextifyiNumber;
@@ -26,7 +25,7 @@ class ClientOverview extends BaseWidget
             Stat::make('Active Text Responses', fn () => TextResponse::where('active', true)->count()),
             Stat::make('Active TextiFYI Numbers', fn () => TextifyiNumber::where('used', true)->count()),
             Stat::make('Available TextiFYI Numbers', fn () => TextifyiNumber::where('used', false)->count()),
-            Stat::make('Total Clients', fn () => Client::count()),
+            Stat::make('Total Clients', fn () => User::where('roles', 'clients')->count()),
         ];
     }
 }

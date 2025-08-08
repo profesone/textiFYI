@@ -32,9 +32,8 @@ return new class extends Migration {
             $table->boolean('default_email_notification')->default(0)->nullable();
             $table->longText('description')->nullable();
             $table->json('textifyi_numbers')->nullable();
-            $table->foreignId('client_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->foreignId('user_id');
+            $table->foreignId('agency_id');
             $table->boolean('active')->default(false);
             $table->softDeletes();
             $table->timestamps();

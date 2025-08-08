@@ -37,7 +37,11 @@ class DispatchResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
-                    ->options(TextifyiNumber::where('used', '=', false)->pluck('number','id'))
+                    ->options(TextifyiNumber::where('used', '=', false)->pluck('number', 'id')->toArray())
+                    ->dehydrateStateUsing(function ($state) {
+                        // Transform the selected IDs back to their corresponding 'number' values
+                        return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
+                    })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),

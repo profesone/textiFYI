@@ -8,7 +8,12 @@ class TextifyiNumberObserver
 {
     public function updated(TextifyiNumber $textifyiNumber): void
     {
-        if(auth()->user()->roles != 'admin') {}
+        
+    }
+
+    public function saving(TextifyiNumber $textifyiNumber): void
+    {
+        //
     }
 
     public function created(TextifyiNumber $textifyiNumber): void

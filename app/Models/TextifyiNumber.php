@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Dispatch;
 use App\Models\Client;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Observers\TextifyiNumberObserver;
@@ -12,12 +13,18 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 #[ObservedBy(TextifyiNumberObserver::class)]
 class TextifyiNumber extends Model
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory;
     protected $fillable = [
         'number',
         'title',
         'dispatch_id',
         'agency_id',
     ];
+
+    protected $casts = [
+    'textifyi_numbers' => 'array',
+];
 
     public function dispatch(): BelongsTo
     {

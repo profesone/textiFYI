@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Client;
 use App\Models\Dispatch;
 use App\Models\TextResponse;
 use App\Models\TextifyiNumber;
@@ -22,7 +21,7 @@ class StatsOverview extends BaseWidget
                 Stat::make('Active Text Responses', fn () => TextResponse::where('active', true)->count()),
                 Stat::make('Active TextiFYI Numbers', fn () => TextifyiNumber::where('used', true)->count()),
                 Stat::make('Available TextiFYI Numbers', fn () => TextifyiNumber::where('used', false)->count()),
-                Stat::make('Total Clients', fn () => Client::count()),
+                Stat::make('Total Clients', fn () => User::where('roles', 'clients')->count()),
             ];
         }
         if (auth()->user()->roles != 'admin') {
@@ -49,7 +48,7 @@ class StatsOverview extends BaseWidget
                 Stat::make('Available TextiFYI Numbers', fn () => TextifyiNumber::where('used', false)
                     ->where('agency_id', auth()->user()->agency_id)
                     ->count()),
-                Stat::make('Total Clients', fn () => Client::where('agency_id', auth()->user()->agency_id)->count()),
+                Stat::make('Total Clients', fn () => User::where('roles', 'clients')->where('agency_id', auth()->user()->agency_id)->count()),
             ];
         }
 

@@ -8,6 +8,7 @@ use App\Models\TextifyiNumber;
 use App\Models\Agency;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\FormsComponent;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -43,12 +44,14 @@ class TextifyiNumberResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('agency.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('dispatch.title')
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('used')
+                    ->boolean(),
+                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('dispatch.title')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

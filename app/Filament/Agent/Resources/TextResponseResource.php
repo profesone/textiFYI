@@ -4,8 +4,8 @@ namespace App\Filament\Agent\Resources;
 
 use App\Filament\Agent\Resources\TextResponseResource\Pages;
 use App\Filament\Agent\Resources\TextResponseResource\RelationManagers;
-use App\Models\Client;
 use App\Models\TextResponse;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -33,8 +33,9 @@ class TextResponseResource extends Resource
                             ->required(),
                         Forms\Components\Select::make('client_id')
                             ->label('Client')
-                            ->options(Client::all()
+                            ->options(User::all()
                                 ->where('agency_id', '=', auth()->user()->agency_id)
+                                ->where('roles', '=', 'client')
                                 ->pluck('user.name', 'id'))
                             ->required(),
                         Forms\Components\Textarea::make('description')
@@ -117,9 +118,9 @@ class TextResponseResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('dispatch.client.user.name')
+                SelectFilter::make('dispatch.client.name')
                     ->relationship(
-                        'dispatch.client.user',
+                        'dispatch.client',
                         'name',
                         fn (Builder $query) => $query
                             ->where('agency_id', auth()->user()->agency_id)
@@ -132,7 +133,7 @@ class TextResponseResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->defaultGroup('dispatch.client.user.name')
+            // ->defaultGroup('dispatch.user.name')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             'city' => 'Brooklyn',
             'state' => 'NY',
             'zip' => '12122',
-            'password' => bcrypt('M3t@1V$$t331')
+            'password' => bcrypt('Brun2025!')
         ]);
 
         User::factory(10)->create();

@@ -32,9 +32,17 @@ class Dispatch extends Model
         'email_address_module',
         'default_email_notification',
         'description',
-        'client_id',
+        'user_id',
+        'agency_id',
         'active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'textifyi_numbers' => 'array',
+        ];
+    }
 
     public function textResponses(): HasMany
     {
@@ -43,16 +51,16 @@ class Dispatch extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function textifyiNumbers(): HasMany
     {
-        return $this->hasMany(TextifyiNumber::class);
+        return $this->hasMany(TextifyiNumber::class, 'textifyi_numbers', 'number');
     }
 
-    public function agency()
+    public function getNumber(string $index)
     {
-        return $this->client->agency;
+        return TextifyiNumber::find(intval($index));
     }
 }

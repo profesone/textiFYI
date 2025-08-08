@@ -29,14 +29,7 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('client_id')
-                    ->label('Client')
-                    ->options(User::where('roles', 'client')
-                        ->where('agency_id', '=', auth()->user()->agency_id)
-                        ->pluck('name', 'id'))
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('client_id')
+                Forms\Components\Select::make('user_id')
                     ->label('Client')
                     ->options(User::where('roles', 'client')
                         ->where('agency_id', '=', auth()->user()->agency_id)
@@ -44,10 +37,37 @@ class DispatchResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\Select::make('textifyi_numbers')
-                    ->multiple()
-                    ->options(TextifyiNumber::where('agency_id', auth()->user()->agency_id)
-                        ->where('used', '=', false)->pluck('number','id'))
-                    ->columnSpanFull(),
+    ->multiple()
+    ->options(function () {
+        return TextifyiNumber::where('used', false)
+            ->where('agency_id', auth()->user()->agency_id)
+            ->pluck('number', 'number')
+            ->toArray();
+    })
+    ->getOptionLabelFromRecordUsing(function ($record) {
+        return $record->number;
+    })
+    ->afterStateHydrated(function ($component, $state) {
+        // Ensure the state is an array of 'number' values
+        if (is_array($state)) {
+            $validNumbers = TextifyiNumber::whereIn('number', $state)
+                ->where('agency_id', auth()->user()->agency_id)
+                ->pluck('number')
+                ->toArray();
+            $component->state($validNumbers);
+        } else {
+            $component->state([]);
+        }
+    })
+    ->dehydrateStateUsing(function ($state) {
+        // Ensure the saved state is an array of valid 'number' values
+        return is_array($state) ? array_filter($state, function ($value) {
+            return TextifyiNumber::where('number', $value)
+                ->where('agency_id', auth()->user()->agency_id)
+                ->exists();
+        }) : [];
+    })
+    ->columnSpanFull(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->columnSpanFull()
@@ -75,6 +95,8 @@ class DispatchResource extends Resource
                 Forms\Components\Toggle::make('default_email_notification'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
+                Forms\Components\Hidden::make('agency_id')
+                    ->default(auth()->user()->agency_id),
             ]);
     }
 
@@ -82,42 +104,16 @@ class DispatchResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $query->whereHas('client', function ($query) {
-                    $query->where('agency_id', auth()->user()->agency_id);
-                });
+                $query->where('agency_id', auth()->user()->agency_id);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('client.user.name')
+                Tables\Columns\TextColumn::make('client.name')
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('default_messages_module')
-                    ->label('Default Message'),
-                Tables\Columns\ToggleColumn::make('default_message_notification')
-                    ->label('Default Message Notification'),
-                Tables\Columns\ToggleColumn::make('default_message_response')
-                    ->label('Default Message Response'),
-                Tables\Columns\ToggleColumn::make('publish_keywords_module')
-                    ->label('Publish Keywords'),
-                Tables\Columns\ToggleColumn::make('leads_module')
-                    ->label('Leads'),
-                Tables\Columns\ToggleColumn::make('keyword_module')
-                    ->label('Keywords'),
-                Tables\Columns\ToggleColumn::make('mls_listing_module')
-                    ->label('MLS Listing'),
-                Tables\Columns\ToggleColumn::make('mls_agent_notification')
-                    ->label('MLS Agent Notification'),
-                Tables\Columns\ToggleColumn::make('tips_request_module')
-                    ->label('Tips Request'),
-                Tables\Columns\ToggleColumn::make('zip_code_module')
-                    ->label('Zip Code'),
-                Tables\Columns\ToggleColumn::make('default_zip_notification')
-                    ->label('Default Zip Notification'),
-                Tables\Columns\ToggleColumn::make('email_address_module')
-                    ->label('Email Address'),
-                Tables\Columns\ToggleColumn::make('default_email_notification')
-                    ->label('Default Email Notification'),
-                Tables\Columns\BooleanColumn::make('active')
+                Tables\Columns\BadgeColumn::make('textifyi_numbers')
+                    ->label('TextiFYI Numbers'),
+                Tables\Columns\IconColumn::make('active')
                     ->icon(fn (string $state): string => match ($state) {
                             '0' => 'heroicon-o-clock',
                             '1' => 'heroicon-o-check-circle',
@@ -136,9 +132,9 @@ class DispatchResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('client.user.name')
+                SelectFilter::make('client')
                     ->relationship(
-                        'client.user',
+                        'client',
                         'name',
                         fn (Builder $query) => $query
                             ->where('agency_id', auth()->user()->agency_id)
@@ -148,7 +144,7 @@ class DispatchResource extends Resource
                     ->searchable()
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
-            ->defaultGroup('client.user.name')
+            ->defaultGroup('client.name')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
