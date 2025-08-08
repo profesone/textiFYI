@@ -9,4 +9,9 @@ use Filament\Resources\Pages\ListRecords;
 class ClientList extends ListRecords
 {
     protected static string $resource = ClientResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

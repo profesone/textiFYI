@@ -50,6 +50,7 @@ class UserSeeder extends Seeder
             'address' => '123 Street',
             'city' => 'Brooklyn',
             'state' => 'NY',
+            'agency_id' => null,
             'zip' => '12122',
             'password' => bcrypt('Brun2025!')
         ]);
