@@ -85,8 +85,7 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('agency_id.name')
-                    ->numeric()                    
+                Forms\Components\TextInput::make('agency_id')
                     ->default(auth()->user()->agency_id)
                     ->hidden(),
                 Forms\Components\TextInput::make('password')
