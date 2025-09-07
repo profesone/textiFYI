@@ -61,8 +61,9 @@ class TextifyiNumberResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
-            ])
+		    Tables\Actions\DeleteAction::make(),
+		    Tables\Actions\EditAction::make(),
+	    ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
