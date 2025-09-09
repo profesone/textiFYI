@@ -5,20 +5,24 @@ namespace App\Observers;
 use App\Models\User;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
+use function PHPUnit\Framework\isNull;
+
 class UserObserver implements ShouldHandleEventsAfterCommit
 {
     public function creating(User $user): void
     { 
-        if (auth()->user()->roles === 'client') {
+        if (!isNull(auth()->user())){
+            if (auth()->user()->roles === 'client') {
             $user->roles = 'client';
-        }
-        // Clients can't create users
-        if (auth()->user()->roles === 'client') {
-            return;
-        }
-        if (auth()->user()->roles != 'admin') {
-            $user->agency_id = auth()->user()->agency_id;
-        }
+            }
+            // Clients can't create users
+            if (auth()->user()->roles === 'client') {
+                return;
+            }
+            if (auth()->user()->roles != 'admin') {
+                $user->agency_id = auth()->user()->agency_id;
+            }
+        }        
     }
 
     public function updating(User $user): void
