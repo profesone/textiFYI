@@ -13,7 +13,10 @@ class TextifyiNumberObserver
 
     public function saving(TextifyiNumber $textifyiNumber): void
     {
-        //
+        // Update 'used' field
+        if(isset($textifyiNumber->agency_id)){
+            $textifyiNumber->used = !empty($textifyiNumber->agency_id);
+        }
     }
 
     public function created(TextifyiNumber $textifyiNumber): void

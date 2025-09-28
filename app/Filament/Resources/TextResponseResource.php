@@ -84,7 +84,9 @@ class TextResponseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('dispatch.title')
-                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('dispatch.client.name')
+                    ->label('Client')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),

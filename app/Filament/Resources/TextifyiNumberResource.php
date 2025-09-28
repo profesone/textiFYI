@@ -30,9 +30,9 @@ class TextifyiNumberResource extends Resource
                     ->options(Agency::pluck('name', 'id'))
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('number')
+                    ->tel()
+                    ->telRegex('^[1-9]\d{2}\.\d{3}\.\d{4}')
                     ->required(),
-                Forms\Components\Select::make('dispatch_id')
-                    ->relationship('dispatch', 'title'),
             ]);
     }
 
@@ -42,9 +42,8 @@ class TextifyiNumberResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('agency.name')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('dispatch.title')
+                Tables\Columns\TextColumn::make('agency.owner.name')
+                    ->label('Client')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('used')
                     ->boolean(),
