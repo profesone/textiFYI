@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TextResponseResource\Pages;
 use App\Filament\Resources\TextResponseResource\RelationManagers;
 use App\Models\TextResponse;
-use App\Models\Client;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -54,11 +54,11 @@ class TextResponseResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\Select::make('client_id')
                             ->label('Client')
-                            ->options(Client::with('user')
+                            ->options(User::where('roles', 'client')
                                 ->where('agency_id', '=', auth()->user()->agency_id)
-                                ->get()
-                                ->pluck('user.name', 'id'))
-                            ->required(),
+                                ->pluck('name', 'id'))
+                            ->required()
+                            ->columnSpanFull(),
                     ]),
                 Forms\Components\TextInput::make('title')
                     ->label('Title')
