@@ -37,12 +37,9 @@ class Dispatch extends Model
         'active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'textifyi_numbers' => 'array',
-        ];
-    }
+    protected $casts = [
+        'textifyi_numbers' => 'array',
+    ];
 
     public function textResponses(): HasMany
     {

@@ -6,6 +6,7 @@ use App\Filament\Resources\TextResponseResource\Pages;
 use App\Filament\Resources\TextResponseResource\RelationManagers;
 use App\Models\TextResponse;
 use App\Models\User;
+use App\Models\TextifyiNumber;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -52,16 +53,29 @@ class TextResponseResource extends Resource
                         Forms\Components\Toggle::make('default_email_notification'),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull(),
-                        Forms\Components\Select::make('client_id')
+                        Forms\Components\Select::make('textifyi_numbers')
+                            ->multiple()
+                            ->options(TextifyiNumber::where('used', '=', 1)
+                                ->pluck('number', 'id')->toArray())
+                            // ->dehydrateStateUsing(function ($state) {
+                            //     // Transform the selected IDs back to their corresponding 'number' values
+                            //     return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
+                            // })
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('user_id')
                             ->label('Client')
-                            ->options(User::where('roles', 'client')
-                                ->where('agency_id', '=', auth()->user()->agency_id)
+                            ->options(User::where('roles', '=', 'client')
                                 ->pluck('name', 'id'))
                             ->required()
-                            ->columnSpanFull(),
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
+                                if ($state) {
+                                    $set('agency_id', User::find($state)->agency_id);
+                                }
+                            }),
+                        Forms\Components\TextInput::make('agency_id'),                            
                     ]),
                 Forms\Components\TextInput::make('title')
-                    ->label('Title')
                     ->required(),
                 Forms\Components\Textarea::make('response')
                     ->label('Response')
@@ -71,7 +85,7 @@ class TextResponseResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('notification_numbers')
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('keywords')
+                Forms\Components\TagsInput::make('keywords')
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('end_date'),
@@ -87,7 +101,7 @@ class TextResponseResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('dispatch.client.name')
                     ->label('Client')
-                    ->sortable(),
+                    ->sortable(),                
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('start_date')
@@ -96,6 +110,8 @@ class TextResponseResource extends Resource
                 Tables\Columns\TextColumn::make('end_date')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('keywords')
+                    ->badge(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')

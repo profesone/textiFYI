@@ -5,64 +5,41 @@ namespace App\Observers;
 use App\Models\Dispatch;
 use App\Models\TextifyiNumber;
 
+use function PHPUnit\Framework\isArray;
+
 class DispatchObserver
 {
-    public function deleted(Dispatch $dispatch): void
-    {
-
-    }
-
     public function saved(Dispatch $dispatch): void
     {
-        // Ensure Agency ID
-        if (isset($dispatch->agency_id)) {
-            $dispatch->agency_id = auth()->user()->agency_id;
-        }
-
         // Set TextiFYI Numbers to used and add Dispatch ID
         if ($dispatch->isDirty('textifyi_numbers')) {
-            $this->setTextiFyiNumbersToFree($dispatch);
+            if (isArray($dispatch->getOriginal("textifyi_numbers"))) {
+                $this->usedNumbers($dispatch->getOriginal("textifyi_numbers"), false);
+            }
+
+            if (isArray(json_decode($dispatch->getChanges()["textifyi_numbers"], true))) {
+                $this->usedNumbers(
+                    json_decode($dispatch->getChanges()["textifyi_numbers"], true),
+                     true
+                );
+            }
+        }
+
+        if (auth()->user()->roles != 'admin') {
+            $dispatch->agency_id = auth()->user()->agency_id;
         }
     }
 
-    public function setTextiFyiNumbersToFree($dispatch): void
+    public function created(Dispatch $dispatch): void
     {
-        $allTextiFYINumbersInDispatches = [];
-        $allAgencyTextiFYINumbers = [];
 
-        $dispatchRows = Dispatch::where('agency_id', $dispatch->agency_id)
-            ->select('textifyi_numbers')
-            ->get()
-            ->toArray();
+    }
 
-        $agencyRows = TextifyiNumber::where('agency_id', $dispatch->agency_id)
-            ->select('number')
-            ->get()
-            ->toArray();
-
-        array_walk_recursive($dispatchRows, function($value) use (&$allTextiFYINumbersInDispatches) {
-            $allTextiFYINumbersInDispatches[] = $value;
-        });
-
-        array_walk_recursive($agencyRows, function($value) use (&$allAgencyTextiFYINumbers) {
-            $allAgencyTextiFYINumbers[] = $value;
-        });
-
-        // $allTextiFYINumbersInDispatches = array_merge($allTextiFYINumbersInDispatches, $dispatch->textifyi_numbers);
-
-        $UnUsedTextiFYINumbers = array_diff($allAgencyTextiFYINumbers,$allTextiFYINumbersInDispatches);
-
-        // Set all numbers of the agency to used
-        TextifyiNumber::whereIn('number', $allAgencyTextiFYINumbers)
-            ->update([
-                'used' => true,
-            ]);
-        
-        // Only free the numbers of the agency that are not used
-        TextifyiNumber::whereIn('number', $UnUsedTextiFYINumbers)
-            ->update([
-                'used' => false,
-                'dispatch_id' => null,
-            ]);
+    private function usedNumbers(array $numbers, bool $used) : void
+    {
+        if(isset($numbers)){
+            TextifyiNumber::whereIn('id', $numbers)
+            ->update(['used' => $used]);
+        }        
     }
 }

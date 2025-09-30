@@ -91,7 +91,7 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
-                    ->required()
+                    ->revealable()
                     ->hiddenOn('edit')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('active')

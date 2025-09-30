@@ -27,21 +27,32 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('client_id')
+                Forms\Components\Select::make('user_id')
                     ->label('Client')
-                    ->options(User::where('roles', 'client')
+                    ->options(User::where('roles', '=', 'client')
                         ->pluck('name', 'id'))
                     ->required()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->live()
+                    ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
+                        if ($state) {
+                            $set('agency_id', User::find($state)->agency_id);
+                        }
+                    }),
+                Forms\Components\TextInput::make('agency_id')
+                    ->hidden(),
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
-                    ->options(TextifyiNumber::where('used', '=', false)->pluck('number', 'id')->toArray())
-                    ->dehydrateStateUsing(function ($state) {
-                        // Transform the selected IDs back to their corresponding 'number' values
-                        return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
-                    })
+                    ->options(TextifyiNumber::where('used', '=', 0)
+                        ->pluck('number')
+                        ->toArray()
+                    )
+                    // ->dehydrateStateUsing(function ($state) {
+                    //     // Transform the selected IDs back to their corresponding 'number' values
+                    //     return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
+                    // })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),
@@ -76,18 +87,29 @@ class DispatchResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),                
-                Tables\Columns\TextColumn::make('client.user.name')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('client.name')
+                    ->label('Client')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('client.agency.name')
+                    ->label('Agency')
+                    ->searchable(),
                 Tables\Columns\ToggleColumn::make('active'),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('textifyi_numbers')
+                    ->badge()
+                    ->default('None')
+                    ->formatStateUsing(function ($state) {
+                        $value = TextifyiNumber::find($state);
+                        return $value ? $value->number : $state;
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

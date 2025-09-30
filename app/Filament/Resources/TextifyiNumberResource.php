@@ -31,7 +31,7 @@ class TextifyiNumberResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('number')
                     ->tel()
-                    ->telRegex('^[1-9]\d{2}\.\d{3}\.\d{4}')
+                    ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
                     ->required(),
             ]);
     }
@@ -45,8 +45,7 @@ class TextifyiNumberResource extends Resource
                 Tables\Columns\TextColumn::make('agency.owner.name')
                     ->label('Client')
                     ->sortable(),
-                Tables\Columns\IconColumn::make('used')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('used'),
                  Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -4,6 +4,7 @@ namespace App\Filament\Agent\Resources;
 
 use App\Filament\Agent\Resources\TextResponseResource\Pages;
 use App\Filament\Agent\Resources\TextResponseResource\RelationManagers;
+use App\Models\TextifyiNumber;
 use App\Models\TextResponse;
 use App\Models\User;
 use Filament\Forms;
@@ -31,13 +32,27 @@ class TextResponseResource extends Resource
                     ->createOptionForm([
                         Forms\Components\TextInput::make('title')
                             ->required(),
-                        Forms\Components\Select::make('client_id')
+                        Forms\Components\Select::make('user_id')
                             ->label('Client')
-                            ->options(User::all()
-                                ->where('agency_id', '=', auth()->user()->agency_id)
-                                ->where('roles', '=', 'client')
-                                ->pluck('user.name', 'id'))
-                            ->required(),
+                            ->options(User::where('roles', '=', 'client')
+                                ->pluck('name', 'id'))
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
+                                if ($state) {
+                                    $set('agency_id', User::find($state)->agency_id);
+                                }
+                            }),
+                        Forms\Components\TextInput::make('agency_id'),
+                        Forms\Components\Select::make('textifyi_numbers')
+                            ->multiple()
+                            ->options(TextifyiNumber::where('used', '=', false)
+                                ->pluck('number', 'id')->toArray())
+                            ->dehydrateStateUsing(function ($state) {
+                                // Transform the selected IDs back to their corresponding 'number' values
+                                return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
+                            })
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull(),   
                         Forms\Components\Textarea::make('default_message')
@@ -91,7 +106,8 @@ class TextResponseResource extends Resource
                     ->searchable()
                     ->label('Client')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->url(fn (TextResponse $record) => DispatchResource::getUrl('edit', ['record' => $record->dispatch])),
                 Tables\Columns\TextColumn::make('dispatch.title')
                     ->searchable()
                     ->sortable(),

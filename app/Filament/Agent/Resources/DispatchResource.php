@@ -29,49 +29,31 @@ class DispatchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->label('Client')
-                    ->options(User::where('roles', 'client')
-                        ->where('agency_id', '=', auth()->user()->agency_id)
-                        ->pluck('name', 'id'))
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('textifyi_numbers')
-    ->multiple()
-    ->options(function () {
-        return TextifyiNumber::where('used', false)
-            ->where('agency_id', auth()->user()->agency_id)
-            ->pluck('number', 'number')
-            ->toArray();
-    })
-    ->getOptionLabelFromRecordUsing(function ($record) {
-        return $record->number;
-    })
-    ->afterStateHydrated(function ($component, $state) {
-        // Ensure the state is an array of 'number' values
-        if (is_array($state)) {
-            $validNumbers = TextifyiNumber::whereIn('number', $state)
-                ->where('agency_id', auth()->user()->agency_id)
-                ->pluck('number')
-                ->toArray();
-            $component->state($validNumbers);
-        } else {
-            $component->state([]);
-        }
-    })
-    ->dehydrateStateUsing(function ($state) {
-        // Ensure the saved state is an array of valid 'number' values
-        return is_array($state) ? array_filter($state, function ($value) {
-            return TextifyiNumber::where('number', $value)
-                ->where('agency_id', auth()->user()->agency_id)
-                ->exists();
-        }) : [];
-    })
-    ->columnSpanFull(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->columnSpanFull()
                     ->maxLength(255),
+                Forms\Components\Select::make('user_id')
+                    ->label('Client')
+                    ->options(User::where('roles', '=', 'client')
+                        ->pluck('name', 'id'))
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
+                        if ($state) {
+                            $set('agency_id', User::find($state)->agency_id);
+                        }
+                    }),
+                Forms\Components\TextInput::make('agency_id'),
+                Forms\Components\Select::make('textifyi_numbers')
+                    ->multiple()
+                    ->options(TextifyiNumber::where('used', '=', false)
+                        ->pluck('number', 'id')->toArray())
+                    ->dehydrateStateUsing(function ($state) {
+                        // Transform the selected IDs back to their corresponding 'number' values
+                        return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
+                    })
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_message')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('default_request_message')

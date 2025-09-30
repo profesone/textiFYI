@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Agency;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -44,16 +45,30 @@ class UserResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('zip')
                     ->required(),
-                Forms\Components\TextInput::make('country'),
+                Forms\Components\Select::make('country')
+                    ->options([
+                        'US' => 'United States',
+                        'CA' => 'Canada'
+                    ]),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('website'),
-                Forms\Components\TextInput::make('team_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('roles')
+                Forms\Components\Select::make('agency.name')
+                    ->options(Agency::pluck('name', 'id'))
+                    ->columnSpanFull()
+                    ->label('Agency')
+                    ->required(),
+                Forms\Components\Select::make('roles')
+                    ->options([
+                        'admin' => 'Admin',
+                        'agent' => 'Agent',
+                        'client' => 'Client',
+                    ])
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
+                    ->revealable()
                     ->required(),
                 Forms\Components\Toggle::make('active')
                     ->required(),
