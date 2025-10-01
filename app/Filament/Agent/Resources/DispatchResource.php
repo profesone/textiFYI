@@ -37,14 +37,7 @@ class DispatchResource extends Resource
                     ->label('Client')
                     ->options(User::where('roles', '=', 'client')
                         ->pluck('name', 'id'))
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
-                        if ($state) {
-                            $set('agency_id', User::find($state)->agency_id);
-                        }
-                    }),
-                Forms\Components\TextInput::make('agency_id'),
+                    ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
                     ->options(TextifyiNumber::where('used', '=', false)

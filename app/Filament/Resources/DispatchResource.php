@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
+use App\Models\Agency;
 use App\Models\Dispatch;
 use App\Models\TextifyiNumber;
 use App\Models\User;
@@ -32,7 +33,6 @@ class DispatchResource extends Resource
                     ->options(User::where('roles', '=', 'client')
                         ->pluck('name', 'id'))
                     ->required()
-                    ->columnSpanFull()
                     ->live()
                     ->afterStateUpdated(function (Forms\Set $set, ?int $state) {
                         if ($state) {
@@ -40,8 +40,10 @@ class DispatchResource extends Resource
                         }
                     }),
                 Forms\Components\TextInput::make('agency_id')
-                    ->hidden(),
+                    ->disabled()
+                    ->default(auth()->user()->agency_id ?? 0),
                 Forms\Components\TextInput::make('title')
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
