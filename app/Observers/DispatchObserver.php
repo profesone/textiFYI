@@ -13,11 +13,15 @@ class DispatchObserver
     {
         // Set TextiFYI Numbers to used and add Dispatch ID
         if ($dispatch->isDirty('textifyi_numbers')) {
-            if (isArray($dispatch->getOriginal("textifyi_numbers"))) {
+            if  (
+                    isset($dispatch->getChanges()["textifyi_numbers"])
+                    && isArray($dispatch->getOriginal("textifyi_numbers"))
+                )
+                {
                 $this->usedNumbers($dispatch->getOriginal("textifyi_numbers"), false);
             }
 
-            if (
+            if  (
                     isset($dispatch->getChanges()["textifyi_numbers"])
                     && isArray(json_decode($dispatch->getChanges()["textifyi_numbers"], true))
                 ) {
