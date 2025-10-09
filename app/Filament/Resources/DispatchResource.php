@@ -49,7 +49,7 @@ class DispatchResource extends Resource
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
                     ->options(TextifyiNumber::where('used', '=', 0)
-                        ->pluck('number')
+                        ->pluck('number', 'id')
                         ->toArray()
                     ),
                 Forms\Components\Textarea::make('default_message'),
@@ -88,10 +88,10 @@ class DispatchResource extends Resource
                 Tables\Columns\TextColumn::make('textifyi_numbers')
                     ->badge()
                     ->searchable()
-                    ->default('None')
                     ->formatStateUsing(function ($state) {
-                        $value = TextifyiNumber::find($state);
-                        return $value ? $value->number : $state;
+                        return TextifyiNumber::where('id', $state)
+                            ->pluck('number')
+                            ->toArray()[0];
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
