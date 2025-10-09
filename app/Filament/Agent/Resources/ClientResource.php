@@ -85,9 +85,6 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('agency_id')
-                    ->default(auth()->user()->agency_id)
-                    ->hidden(),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
@@ -104,7 +101,7 @@ class ClientResource extends Resource
         return $table
             ->modifyQueryUsing(function (Builder $query) {
                 $query->where('agency_id', auth()->user()->agency_id)
-                ->whereIn('roles', ['client', 'agent']);
+                    ->whereIn('roles', ['client', 'agent']);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('name')

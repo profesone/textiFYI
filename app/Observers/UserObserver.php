@@ -9,35 +9,13 @@ use function PHPUnit\Framework\isNull;
 
 class UserObserver implements ShouldHandleEventsAfterCommit
 {
-    public function creating(User $user): void
+    public function saving(User $user): void
     { 
-        if (!isNull(auth()->user())){
-            if (auth()->user()->roles === 'client') {
-            $user->roles = 'client';
-            }
-            // Clients can't create users
-            if (auth()->user()->roles === 'client') {
-                return;
-            }
+        // dd(auth()->user()->agency_id. ' ' . auth()->user()->roles);
+        if (null !== auth()->user()){
             if (auth()->user()->roles != 'admin') {
                 $user->agency_id = auth()->user()->agency_id;
             }
         }        
-    }
-
-    public function updating(User $user): void
-    {
-        if (auth()->user()->roles === 'client') {
-            $user->roles = 'client';
-        }
-        if (auth()->hasUser()) {
-            // Clients can't create users
-            if (auth()->user()->roles === 'client') {
-                return;
-            }
-            if (auth()->user()->roles != 'admin') {
-                $user->agency_id = auth()->user()->agency_id;
-            }
-        }
     }
 }

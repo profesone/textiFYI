@@ -25,12 +25,6 @@ class TextifyiNumberResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('number')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('used')
-                    ->required(),
-                Forms\Components\Select::make('dispatch.title'),
             ]);
     }
 
@@ -45,11 +39,12 @@ class TextifyiNumberResource extends Resource
                     ->numeric()
                     ->label('Number')
                     ->searchable(),
+                Tables\Columns\SelectColumn::make('priority')
+                    ->options(
+                        TextifyiNumber::PRIORITY
+                    ),
                 Tables\Columns\IconColumn::make('used')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('dispatch.title')
-                    ->label('Dispatch')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -57,7 +52,7 @@ class TextifyiNumberResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Last Updated'),
             ])
             ->filters([
                 //

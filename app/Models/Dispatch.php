@@ -51,6 +51,11 @@ class Dispatch extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function agency(): BelongsTo
+    {
+        return $this->belongsTo(Agency::class, 'agency_id', 'id');
+    }
+
     public function textifyiNumbers(): HasMany
     {
         return $this->hasMany(TextifyiNumber::class, 'textifyi_numbers', 'number');

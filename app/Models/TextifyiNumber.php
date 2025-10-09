@@ -20,11 +20,21 @@ class TextifyiNumber extends Model
         'title',
         'dispatch_id',
         'agency_id',
+        'notes',
     ];
 
     protected $casts = [
-    'textifyi_numbers' => 'array',
-];
+        'textifyi_numbers' => 'array',
+    ];
+
+    const PRIORITY = [
+        'vip' => 'VIP',
+        'a' => 'A',
+        'b' => 'B',
+        'c' => 'C',
+        'd' => 'D',
+        'f' => 'F',
+    ];
 
     public function dispatch(): BelongsTo
     {

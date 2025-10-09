@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DispatchResource\Pages;
 use App\Filament\Resources\DispatchResource\RelationManagers;
+use App\Filament\Resources\DispatchResource\RelationManagers\TextResponsesRelationManager;
 use App\Models\Agency;
 use App\Models\Dispatch;
 use App\Models\TextifyiNumber;
@@ -39,31 +40,22 @@ class DispatchResource extends Resource
                             $set('agency_id', User::find($state)->agency_id);
                         }
                     }),
-                Forms\Components\TextInput::make('agency_id')
-                    ->disabled()
-                    ->default(auth()->user()->agency_id ?? 0),
+                Forms\Components\Select::make('agency_id')
+                    ->options(
+                        Agency::pluck('name', 'id')->toArray()
+                    ),
                 Forms\Components\TextInput::make('title')
-                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
                     ->options(TextifyiNumber::where('used', '=', 0)
                         ->pluck('number')
                         ->toArray()
-                    )
-                    // ->dehydrateStateUsing(function ($state) {
-                    //     // Transform the selected IDs back to their corresponding 'number' values
-                    //     return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
-                    // })
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('default_message')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('default_request_message')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('default_zipcode_message')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('email_address_response')
-                    ->columnSpanFull(),
+                    ),
+                Forms\Components\Textarea::make('default_message'),
+                Forms\Components\Textarea::make('default_request_message'),
+                Forms\Components\Textarea::make('default_zipcode_message'),
+                Forms\Components\Textarea::make('email_address_response'),
                 Forms\Components\Toggle::make('default_messages_module'),
                 Forms\Components\Toggle::make('default_message_notification'),
                 Forms\Components\Toggle::make('default_message_response'),
@@ -92,12 +84,10 @@ class DispatchResource extends Resource
                 Tables\Columns\TextColumn::make('client.name')
                     ->label('Client')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('client.agency.name')
-                    ->label('Agency')
-                    ->searchable(),
                 Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('textifyi_numbers')
                     ->badge()
+                    ->searchable()
                     ->default('None')
                     ->formatStateUsing(function ($state) {
                         $value = TextifyiNumber::find($state);
@@ -125,6 +115,7 @@ class DispatchResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->defaultGroup('agency.owner.name')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -135,7 +126,7 @@ class DispatchResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TextResponsesRelationManager::class
         ];
     }
 

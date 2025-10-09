@@ -57,10 +57,6 @@ class TextResponseResource extends Resource
                             ->multiple()
                             ->options(TextifyiNumber::where('used', '=', 1)
                                 ->pluck('number', 'id')->toArray())
-                            // ->dehydrateStateUsing(function ($state) {
-                            //     // Transform the selected IDs back to their corresponding 'number' values
-                            //     return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
-                            // })
                             ->columnSpanFull(),
                         Forms\Components\Select::make('user_id')
                             ->label('Client')
@@ -73,10 +69,13 @@ class TextResponseResource extends Resource
                                     $set('agency_id', User::find($state)->agency_id);
                                 }
                             }),
-                        Forms\Components\TextInput::make('agency_id'),                            
-                    ]),
-                Forms\Components\TextInput::make('title')
-                    ->required(),
+                        Forms\Components\TextInput::make('agency_id'),
+                        ])
+                        ->columnSpanFull(),
+                Forms\Components\TextInput::make('title'),
+                Forms\Components\Select::make('campaign')
+                    ->options(TextResponse::CAMPAIGN)    
+                    ->default('keyword'),
                 Forms\Components\Textarea::make('response')
                     ->label('Response')
                     ->columnSpanFull(),
@@ -97,19 +96,24 @@ class TextResponseResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('dispatch.agency.owner.name')
+                    ->hidden()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('dispatch.title')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('dispatch.client.name')
                     ->label('Client')
-                    ->sortable(),                
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('response')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('end_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('keywords')
                     ->badge(),
                 Tables\Columns\IconColumn::make('active')
@@ -126,6 +130,7 @@ class TextResponseResource extends Resource
             ->filters([
                 //
             ])
+            ->defaultGroup('dispatch.agency.owner.name')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
