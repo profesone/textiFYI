@@ -26,6 +26,26 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                    Forms\Components\Select::make('agency_id')
+                        ->relationship(name: 'agency', titleAttribute: 'name')
+                        ->createOptionForm([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('description')
+                        ->maxLength(255)
+                        ->default(null),
+                    Forms\Components\TextInput::make('website')
+                        ->maxLength(255)
+                        ->default(null),
+                    Forms\Components\Select::make('owner_id')
+                        ->label('Owner')
+                        ->options(User::where('roles', 'lead_agent')
+                            ->pluck('name', 'id'))
+                        ->required(),
+                ])
+                ->required()
+                ->columnSpanFull(),
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\TextInput::make('company_name')
@@ -52,11 +72,6 @@ class UserResource extends Resource
                     ]),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('website'),
-                Forms\Components\Select::make('agency.name')
-                    ->options(Agency::pluck('name', 'id'))
-                    ->columnSpanFull()
-                    ->label('Agency')
-                    ->required(),
                 Forms\Components\Select::make('roles')
                     ->options([
                         'admin' => 'Admin',

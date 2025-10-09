@@ -4,6 +4,7 @@ namespace App\Filament\Agent\Resources;
 
 use App\Filament\Agent\Resources\TextResponseResource\Pages;
 use App\Filament\Agent\Resources\TextResponseResource\RelationManagers;
+use App\Models\Agency;
 use App\Models\TextifyiNumber;
 use App\Models\TextResponse;
 use App\Models\User;
@@ -21,7 +22,9 @@ class TextResponseResource extends Resource
 {
     protected static ?string $model = TextResponse::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-oval-left-ellipsis';
+    protected static bool $shouldRegisterNavigation = false;
+
+    // protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-oval-left-ellipsis';
 
     public static function form(Form $form): Form
     {
@@ -30,8 +33,6 @@ class TextResponseResource extends Resource
                 Forms\Components\Select::make('dispatch_id')
                     ->relationship('dispatch', 'title')
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('title')
-                            ->required(),
                         Forms\Components\Select::make('user_id')
                             ->label('Client')
                             ->options(User::where('roles', '=', 'client')
@@ -43,26 +44,21 @@ class TextResponseResource extends Resource
                                     $set('agency_id', User::find($state)->agency_id);
                                 }
                             }),
-                        Forms\Components\TextInput::make('agency_id'),
+                        Forms\Components\Hidden::make('agency_id')
+                            ->default(auth()->user()->agency_id),
+                        Forms\Components\TextInput::make('title')
+                            ->required(),
                         Forms\Components\Select::make('textifyi_numbers')
                             ->multiple()
-                            ->options(TextifyiNumber::where('used', '=', false)
-                                ->pluck('number', 'id')->toArray())
-                            ->dehydrateStateUsing(function ($state) {
-                                // Transform the selected IDs back to their corresponding 'number' values
-                                return TextifyiNumber::whereIn('id', $state)->pluck('number')->toArray();
-                            })
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('description')
-                            ->columnSpanFull(),   
-                        Forms\Components\Textarea::make('default_message')
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('default_request_message')
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('default_zipcode_message')
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('email_address_response')
-                            ->columnSpanFull(),
+                            ->options(TextifyiNumber::where('used', '=', 0)
+                                ->where('agency_id', auth()->user()->agency_id)
+                                ->pluck('number')
+                                ->toArray()
+                            ),
+                        Forms\Components\Textarea::make('default_message'),
+                        Forms\Components\Textarea::make('default_request_message'),
+                        Forms\Components\Textarea::make('default_zipcode_message'),
+                        Forms\Components\Textarea::make('email_address_response'),
                         Forms\Components\Toggle::make('default_messages_module'),
                         Forms\Components\Toggle::make('default_message_notification'),
                         Forms\Components\Toggle::make('default_message_response'),
@@ -75,7 +71,10 @@ class TextResponseResource extends Resource
                         Forms\Components\Toggle::make('zip_code_module'),
                         Forms\Components\Toggle::make('default_zip_notification'),
                         Forms\Components\Toggle::make('email_address_module'),
-                        Forms\Components\Toggle::make('default_email_notification'),                                            
+                        Forms\Components\Toggle::make('default_email_notification'),
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull(),
+                        Forms\Components\Toggle::make('active'),                                           
                     ])
                     ->required(),
                 Forms\Components\TextInput::make('title')
@@ -149,6 +148,7 @@ class TextResponseResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->defaultGroup('dispatch.client.name')
             // ->defaultGroup('dispatch.user.name')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

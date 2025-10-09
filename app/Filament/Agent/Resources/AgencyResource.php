@@ -22,8 +22,6 @@ class AgencyResource extends Resource
 
     protected static ?string $navigationLabel = 'Agency';
 
-    protected static ?string $navigationGroup = 'Management';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -48,8 +46,6 @@ class AgencyResource extends Resource
         })
         ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
                     ->searchable(),

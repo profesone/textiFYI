@@ -51,10 +51,18 @@ class AgencyResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->description(fn (Agency $record): string => substr($record->description, 0, 40) . "..."),
+                Tables\Columns\TextColumn::make('owner.name')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('owner.phone')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('owner.email')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('website')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('owner.name')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -70,6 +78,7 @@ class AgencyResource extends Resource
             ->actions([
                 Tables\Actions\DeleteAction::make(),
             ])
+            ->defaultGroup('owner.name')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

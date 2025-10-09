@@ -29,6 +29,7 @@ class TextifyiNumberResource extends Resource
                     ->label('Agency')
                     ->options(Agency::pluck('name', 'id'))
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('notes'),
                 Forms\Components\TextInput::make('number')
                     ->tel()
                     ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
@@ -41,12 +42,18 @@ class TextifyiNumberResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('number')
+                    ->label('TextiFYI #')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('agency.owner.name')
-                    ->label('Client')
-                    ->sortable(),
-                Tables\Columns\ToggleColumn::make('used'),
-                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Billable Client')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('notes')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('used')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

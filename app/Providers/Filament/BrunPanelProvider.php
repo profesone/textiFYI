@@ -43,14 +43,6 @@ class BrunPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('img/TextiFYI_web_sm.png'))
             ->navigationItems([
-                NavigationItem::make('Main App')
-                    ->url('/')
-                    ->icon('heroicon-o-beaker')
-                    ->sort(1),
-                NavigationItem::make('Clients')
-                    ->url('/brun/clients')
-                    ->icon('heroicon-o-user-plus')
-                    ->sort(2),
                 NavigationItem::make('Dispatches')
                     ->url('/brun/dispatches')
                     ->icon('heroicon-o-cog-6-tooth')

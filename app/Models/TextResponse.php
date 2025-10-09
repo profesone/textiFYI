@@ -18,7 +18,14 @@ class TextResponse extends Model
         'active',
         'title',
         'dispatch_id',
+        'campaign',
+        'priority',
     ];
+
+    const CAMPAIGN = [
+        'keywords' => 'Keywords',
+        'contacts' => 'Contacts',
+    ];    
 
     protected $casts = [
         'keywords' => 'array',

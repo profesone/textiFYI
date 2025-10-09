@@ -13,31 +13,21 @@ class DispatchObserver
     {
         // Set TextiFYI Numbers to used and add Dispatch ID
         if ($dispatch->isDirty('textifyi_numbers')) {
-            if  (
-                    isset($dispatch->getChanges()["textifyi_numbers"])
-                    && isArray($dispatch->getOriginal("textifyi_numbers"))
-                )
-                {
-                $this->usedNumbers($dispatch->getOriginal("textifyi_numbers"), false);
-            }
+            $newNumbers = $dispatch->textifyi_numbers ?? null;
+            $oldNumbers = $dispatch->getOriginal("textifyi_numbers") ?? null; // = an array
+            
+            // Set old previous numbers
+            $this->usedNumbers($oldNumbers, false);
 
-            if  (
-                    isset($dispatch->getChanges()["textifyi_numbers"])
-                    && isArray(json_decode($dispatch->getChanges()["textifyi_numbers"], true))
-                ) {
-                $this->usedNumbers(
-                    json_decode($dispatch->getChanges()["textifyi_numbers"], true),
-                     true
-                );
-            }
+            // Set new updated changes
+            $this->usedNumbers($newNumbers, true);
         }
     }
 
     private function usedNumbers(array|null $numbers, bool $used) : void
     {
         if(isset($numbers)){
-            TextifyiNumber::whereIn('id', $numbers)
-            ->update(['used' => $used]);
+            TextifyiNumber::whereIn('id', $numbers)->update(['used' => $used]);
         }        
     }
 }
