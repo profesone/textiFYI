@@ -41,8 +41,7 @@ class UserResource extends Resource
                     Forms\Components\Select::make('owner_id')
                         ->label('Owner')
                         ->options(User::where('roles', 'lead_agent')
-                            ->pluck('name', 'id'))
-                        ->required(),
+                            ->pluck('name', 'id')),
                 ])
                 ->required()
                 ->columnSpanFull(),
