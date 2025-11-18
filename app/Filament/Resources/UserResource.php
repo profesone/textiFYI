@@ -76,6 +76,7 @@ class UserResource extends Resource
                         'admin' => 'Admin',
                         'agent' => 'Agent',
                         'client' => 'Client',
+                        'lead_agent' => 'Owner',
                     ])
                     ->columnSpanFull()
                     ->required(),
