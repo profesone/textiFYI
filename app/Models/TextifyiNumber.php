@@ -17,7 +17,7 @@ class TextifyiNumber extends Model
     use HasFactory;
     protected $fillable = [
         'number',
-        'title',
+        'priority',
         'dispatch_id',
         'agency_id',
         'notes',
