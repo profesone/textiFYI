@@ -17,10 +17,10 @@ class TextifyiNumber extends Model
     use HasFactory;
     protected $fillable = [
         'number',
-        'title',
         'dispatch_id',
         'agency_id',
         'notes',
+        'priority',
     ];
 
     protected $casts = [
