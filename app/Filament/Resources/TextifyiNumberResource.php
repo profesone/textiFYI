@@ -8,7 +8,6 @@ use App\Models\TextifyiNumber;
 use App\Models\Agency;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\FormsComponent;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -40,6 +39,7 @@ class TextifyiNumberResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['agency.owner']))
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->label('TextiFYI #')
@@ -47,7 +47,8 @@ class TextifyiNumberResource extends Resource
                 Tables\Columns\TextColumn::make('agency.owner.name')
                     ->label('Billable Client')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->default('N/A'),
                 Tables\Columns\TextColumn::make('notes')
                     ->sortable()
                     ->searchable(),
