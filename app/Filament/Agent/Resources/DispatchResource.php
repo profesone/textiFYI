@@ -4,6 +4,7 @@ namespace App\Filament\Agent\Resources;
 
 use App\Filament\Agent\Resources\DispatchResource\Pages;
 use App\Filament\Agent\Resources\DispatchResource\RelationManagers;
+use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
 use App\Filament\Resources\DispatchResource\RelationManagers\TextResponsesRelationManager;
 use App\Models\Agency;
 use App\Models\Dispatch;
@@ -131,6 +132,9 @@ class DispatchResource extends Resource
             ->defaultGroup('client.name')
             ->actions([
                 Tables\Actions\EditAction::make(),
+                RelationManagerAction::make('text-responses-relation-manager')
+                    ->label('View text responses')
+                    ->relationManager(TextResponsesRelationManager::make()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
