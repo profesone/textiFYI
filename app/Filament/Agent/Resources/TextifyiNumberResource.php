@@ -36,7 +36,6 @@ class TextifyiNumberResource extends Resource
             })
             ->columns([
                 Tables\Columns\TextColumn::make('number')
-                    ->numeric()
                     ->label('Number')
                     ->searchable(),
                 Tables\Columns\SelectColumn::make('priority')

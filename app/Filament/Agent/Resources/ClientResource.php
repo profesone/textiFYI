@@ -45,15 +45,21 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->label('Email')
+                    ->prefixIcon('heroicon-o-envelope')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->label('Phone')
+                    ->tel()
+                    ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
                     ->required()
+                    ->prefixIcon('heroicon-o-phone')
+                    ->helperText('Format: 123.456.7890')
                     ->maxLength(20),
                 Forms\Components\TextInput::make('address')
                     ->label('Address')
                     ->required()
+                    ->prefixIcon('heroicon-o-map-pin')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('address_2')
                     ->label('Address 2')
@@ -126,6 +132,7 @@ class ClientResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('country')
                     ->label('Country')
+                    ->default('US')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')

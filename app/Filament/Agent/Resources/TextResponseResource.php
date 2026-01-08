@@ -80,6 +80,7 @@ class TextResponseResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\Textarea::make('response')
+                    ->required()
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),

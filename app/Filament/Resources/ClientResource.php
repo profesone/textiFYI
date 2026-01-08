@@ -29,11 +29,16 @@ class ClientResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->prefixIcon('heroicon-o-envelope')
                     ->required(),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
+                    ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
+                    ->prefixIcon('heroicon-o-phone')
+                    ->helperText('Format: 123.456.7890')
                     ->required(),
                 Forms\Components\TextInput::make('address')
+                    ->prefixIcon('heroicon-o-map-pin')
                     ->required(),
                 Forms\Components\TextInput::make('address_2'),
                 Forms\Components\TextInput::make('city')
@@ -42,7 +47,9 @@ class ClientResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('zip')
                     ->required(),
-                Forms\Components\TextInput::make('country'),
+                Forms\Components\TextInput::make('country')
+                    ->required()
+                    ->default('US'),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('website'),
                 Forms\Components\TextInput::make('team_id')
@@ -52,7 +59,8 @@ class ClientResource extends Resource
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->editDisabled()
+                    ->revealable()
+                    ->hiddenOn('edit')
                     ->required(),
                 Forms\Components\Toggle::make('active')
                     ->required(),

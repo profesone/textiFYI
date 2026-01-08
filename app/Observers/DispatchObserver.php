@@ -24,6 +24,14 @@ class DispatchObserver
         }
     }
 
+    public function saving(Dispatch $dispatch): void
+    {
+        if (!isset(auth()->user()->agency_id)) {
+            $dispatch->agency_id = auth()->user()->agency_id;
+            dd(auth()->user());
+        }
+    }
+
     private function usedNumbers(array|null $numbers, bool $used) : void
     {
         if(isset($numbers)){

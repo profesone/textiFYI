@@ -78,6 +78,7 @@ class TextResponseResource extends Resource
                     ->default('keyword'),
                 Forms\Components\Textarea::make('response')
                     ->label('Response')
+                    ->required()
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('notes')
                     ->label('Notes')

@@ -50,11 +50,27 @@ class DispatchResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
-                    ->options(TextifyiNumber::where('used', '=', 0)
-                        ->where('agency_id', auth()->user()->agency_id)
-                        ->pluck('number', 'id')
-                        ->toArray()
-                ),
+                    ->options(function ($get) {
+                        $query = TextifyiNumber::where('agency_id', auth()->user()->agency_id);
+                        
+                        // Include already selected numbers even if they're marked as used
+                        $selectedNumbers = $get('textifyi_numbers');
+                        if (!empty($selectedNumbers) && is_array($selectedNumbers)) {
+                            $query->where(function ($q) use ($selectedNumbers) {
+                                $q->where('used', 0)
+                                  ->orWhereIn('id', $selectedNumbers);
+                            });
+                        } else {
+                            $query->where('used', 0);
+                        }
+                        
+                        return $query->pluck('number', 'id')->toArray();
+                    })
+                    ->getOptionLabelUsing(function ($value) {
+                        $number = TextifyiNumber::find($value);
+                        return $number ? $number->number : $value;
+                    })
+                    ->searchable(),
                 Forms\Components\Textarea::make('description'),
                 Forms\Components\Textarea::make('default_message'),
                 Forms\Components\Textarea::make('default_request_message'),
@@ -133,7 +149,7 @@ class DispatchResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 RelationManagerAction::make('text-responses-relation-manager')
-                    ->label('View text responses')
+                    ->label('Responses')
                     ->relationManager(TextResponsesRelationManager::make()),
             ])
             ->bulkActions([

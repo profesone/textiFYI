@@ -29,10 +29,14 @@ class TextifyiNumberResource extends Resource
                     ->label('Agency')
                     ->options(Agency::pluck('name', 'id'))
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('notes'),
+                Forms\Components\TextInput::make('notes')
+                    ->prefixIcon('heroicon-o-pencil')
+                    ->helperText('Notes are optional'),
                 Forms\Components\TextInput::make('number')
                     ->tel()
                     ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
+                    ->prefixIcon('heroicon-o-phone')
+                    ->helperText('Format: 123.456.7890')
                     ->required(),
             ]);
     }

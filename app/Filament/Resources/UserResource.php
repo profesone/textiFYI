@@ -51,11 +51,16 @@ class UserResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->prefixIcon('heroicon-o-envelope')
                     ->required(),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
+                    ->telRegex('/^[1-9]\d{2}\.\d{3}\.\d{4}$/')
+                    ->prefixIcon('heroicon-o-phone')
+                    ->helperText('Format: 123.456.7890')
                     ->required(),
                 Forms\Components\TextInput::make('address')
+                    ->prefixIcon('heroicon-o-map-pin')
                     ->required(),
                 Forms\Components\TextInput::make('address_2'),
                 Forms\Components\TextInput::make('city')
@@ -65,6 +70,8 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('zip')
                     ->required(),
                 Forms\Components\Select::make('country')
+                    ->required()
+                    ->default('US')
                     ->options([
                         'US' => 'United States',
                         'CA' => 'Canada'
@@ -84,6 +91,7 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->revealable()
+                    ->hiddenOn('edit')
                     ->required(),
                 Forms\Components\Toggle::make('active')
                     ->required(),
