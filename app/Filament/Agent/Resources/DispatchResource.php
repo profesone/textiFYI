@@ -118,7 +118,8 @@ class DispatchResource extends Resource
                     ->icon(fn (string $state): string => match ($state) {
                             '0' => 'heroicon-o-clock',
                             '1' => 'heroicon-o-check-circle',
-                        }),
+                        })
+                    ->color(fn (string $state): string => $state === '1' ? 'success' : 'danger'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

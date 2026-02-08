@@ -30,6 +30,11 @@ class DispatchObserver
             $dispatch->agency_id = auth()->user()->agency_id;
             dd(auth()->user());
         }
+
+        // Set active to false if textifyi_numbers is empty or null
+        if (empty($dispatch->textifyi_numbers)) {
+            $dispatch->active = false;
+        }
     }
 
     private function usedNumbers(array|null $numbers, bool $used) : void
