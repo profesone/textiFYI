@@ -8,6 +8,7 @@ use App\Models\Agency;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Resources\Resource;
@@ -28,6 +29,22 @@ class UserResource extends Resource
             ->schema([
                     Forms\Components\Select::make('agency_id')
                         ->relationship(name: 'agency', titleAttribute: 'name')
+                        ->required(fn (Get $get): bool => $get('roles') === 'lead_agent')
+                        ->rules([
+                            function (Get $get, ?\Illuminate\Database\Eloquent\Model $record): \Closure {
+                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    if ($get('roles') !== 'lead_agent' || !$value) return;
+
+                                    $query = User::where('roles', 'lead_agent')->where('agency_id', $value);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
+                                        $fail('This agency already has an owner. Only one lead agent (owner) is allowed per agency.');
+                                    }
+                                };
+                            },
+                        ])
                         ->createOptionForm([
                     Forms\Components\TextInput::make('name')
                         ->required()
@@ -86,7 +103,24 @@ class UserResource extends Resource
                         'lead_agent' => 'Owner',
                     ])
                     ->columnSpanFull()
-                    ->required(),
+                    ->required()
+                    ->rules([
+                        function (Get $get, ?\Illuminate\Database\Eloquent\Model $record): \Closure {
+                            return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                if ($value !== 'lead_agent') return;
+                                $agencyId = $get('agency_id');
+                                if (!$agencyId) return;
+
+                                $query = User::where('roles', 'lead_agent')->where('agency_id', $agencyId);
+                                if ($record) {
+                                    $query->where('id', '!=', $record->id);
+                                }
+                                if ($query->exists()) {
+                                    $fail('This agency already has an owner. Only one lead agent (owner) is allowed per agency.');
+                                }
+                            };
+                        },
+                    ]),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()

@@ -8,6 +8,7 @@ use App\Models\Agency;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,9 +36,22 @@ class AgencyResource extends Resource
                     ->default(null),
                 Forms\Components\Select::make('owner_id')
                     ->label('Owner')
-                    ->options(User::where('roles', 'lead_agent')
-                        ->pluck('name', 'id'))
-                    ->required(),
+                    ->options(User::where('roles', 'lead_agent')->pluck('name', 'id'))
+                    ->required()
+                    ->rules([
+                        function (Get $get, ?\Illuminate\Database\Eloquent\Model $record): \Closure {
+                            return function (string $attribute, $value, \Closure $fail) use ($record) {
+                                if (!$value) return;
+                                $existing = Agency::where('owner_id', $value);
+                                if ($record) {
+                                    $existing->where('id', '!=', $record->id);
+                                }
+                                if ($existing->exists()) {
+                                    $fail('This user already owns another agency. Each user can only own one agency.');
+                                }
+                            };
+                        },
+                    ]),
             ]);
     }
 
