@@ -13,6 +13,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ClientResource extends Resource
@@ -169,12 +170,50 @@ class ClientResource extends Resource
                     }),
                 ], FiltersLayout::AboveContent)
             ->defaultGroup('roles')
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make()
+                    ->visible(fn (User $record): bool => static::canEdit($record)),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn (User $record): bool => static::canDelete($record)),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Tables\Actions\DeleteBulkAction $action) {
+                            $user = auth()->user();
+                            if ($user?->roles !== 'agent') return;
+
+                            $invalid = $action->getSelectedTableRecords()->filter(
+                                fn (User $record) => $record->roles === 'agent' && $record->id !== $user->id
+                            );
+                            if ($invalid->isNotEmpty()) {
+                                \Filament\Notifications\Notification::make()
+                                    ->danger()
+                                    ->title('You cannot delete other agents.')
+                                    ->send();
+                                $action->halt();
+                            }
+                        }),
                 ]),
             ]);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        $user = auth()->user();
+        if ($user?->roles !== 'agent') {
+            return true;
+        }
+        return $record->roles !== 'agent' || $record->id === $user->id;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        $user = auth()->user();
+        if ($user?->roles !== 'agent') {
+            return true;
+        }
+        return $record->roles !== 'agent' || $record->id === $user->id;
     }
 
     public static function getRelations(): array

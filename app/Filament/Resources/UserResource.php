@@ -145,13 +145,9 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->description(fn (User $record): string => $record->city.', '.$record->state.', '.$record->country),
                 Tables\Columns\TextColumn::make('agency.name')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('roles')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),

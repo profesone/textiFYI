@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AgencyResource extends Resource
@@ -78,6 +79,11 @@ class AgencyResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()?->roles === 'lead_agent';
     }
 
     public static function getRelations(): array
