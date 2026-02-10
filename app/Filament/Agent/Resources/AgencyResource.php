@@ -73,12 +73,12 @@ class AgencyResource extends Resource
                         $query->where('id', auth()->user()->agency_id)
                             ->where('roles', '!=', 'client');
                     }),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
     }
 
     public static function canEdit(Model $record): bool
