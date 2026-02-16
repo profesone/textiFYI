@@ -45,9 +45,11 @@ class DispatchResource extends Resource
                         if ($state) {
                             $set('agency_id', User::find($state)->agency_id);
                         }
-                    }),
+                    })
+                    ->visible(fn () => auth()->user()?->roles !== 'client'),
                 Forms\Components\TextInput::make('title')
-                    ->required(),
+                    ->required()
+                    ->visible(fn () => auth()->user()?->roles !== 'client'),
                 Forms\Components\Select::make('textifyi_numbers')
                     ->multiple()
                     ->options(function ($get) {
@@ -70,8 +72,10 @@ class DispatchResource extends Resource
                         $number = TextifyiNumber::find($value);
                         return $number ? $number->number : $value;
                     })
-                    ->searchable(),
-                Forms\Components\Textarea::make('description'),
+                    ->searchable()
+                    ->visible(fn () => auth()->user()?->roles !== 'client'),
+                Forms\Components\Textarea::make('description')
+                    ->visible(fn () => auth()->user()?->roles !== 'client'),
                 Forms\Components\Textarea::make('default_message'),
                 Forms\Components\Textarea::make('default_request_message'),
                 Forms\Components\Textarea::make('default_zipcode_message'),
@@ -99,7 +103,12 @@ class DispatchResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $query->where('agency_id', auth()->user()->agency_id);
+                $user = auth()->user();
+                $query->where('agency_id', $user->agency_id);
+
+                if ($user->roles === 'client') {
+                    $query->where('user_id', $user->id);
+                }
             })
             ->columns([
                 Tables\Columns\TextColumn::make('title')

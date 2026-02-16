@@ -21,6 +21,16 @@ class TextifyiNumberResource extends Resource
 
     protected static ?string $navigationGroup = 'Management';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->roles !== 'client';
+    }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->roles !== 'client';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -37,6 +47,10 @@ class TextifyiNumberResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->label('Number')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('agency.owner.name')
+                    ->label('Agency Owner')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\SelectColumn::make('priority')
                     ->options(

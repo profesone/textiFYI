@@ -24,6 +24,16 @@ class ClientResource extends Resource
 
     protected static ?string $navigationLabel = 'Agents & Clients';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->roles !== 'client';
+    }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->roles !== 'client';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
