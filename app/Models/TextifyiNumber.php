@@ -44,4 +44,15 @@ class TextifyiNumber extends Model
     {
         return $this->belongsTo(Agency::class, 'agency_id', 'id');
     }
+
+    /**
+     * The client (User) currently using this number via a Dispatch.
+     * A Dispatch uses a TextifyiNumber when this number's id is in the dispatch's textifyi_numbers array.
+     */
+    public function currentClient(): ?User
+    {
+        $dispatch = Dispatch::whereJsonContains('textifyi_numbers', (int) $this->id)->first();
+
+        return $dispatch?->client;
+    }
 }

@@ -48,10 +48,9 @@ class TextifyiNumberResource extends Resource
                 Tables\Columns\TextColumn::make('number')
                     ->label('Number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('agency.owner.name')
-                    ->label('Agency Owner')
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('current_client')
+                    ->label('Client')
+                    ->getStateUsing(fn (TextifyiNumber $record) => $record->currentClient()?->name ?? '—'),
                 Tables\Columns\SelectColumn::make('priority')
                     ->options(
                         TextifyiNumber::PRIORITY
